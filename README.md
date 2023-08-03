@@ -5,6 +5,7 @@
 composer install
 ./vendor/bin/sail up
 docker exec -it questionnaire-app bash
+npm i
 npm run dev
 ```
 
