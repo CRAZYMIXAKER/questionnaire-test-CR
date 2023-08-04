@@ -18,11 +18,11 @@ class AnswerFactory extends Factory
     public function definition(): array
     {
         return [
-          'question_id' => $this->faker->numberBetween(1, 5),
-          'session_id' => null,
-          'user_id' => null,
-          'answer' => $this->faker->text(30),
-          'status' => $this->faker->randomElement(['done', 'not done']),
+            'text' => $this->faker->text(30),
+            'status' => $this->faker->randomElement(['done', 'not done']),
+            'question_id' => $this->faker->numberBetween(1, 5),
+            'session_id' => null,
+            'user_id' => null,
         ];
     }
 

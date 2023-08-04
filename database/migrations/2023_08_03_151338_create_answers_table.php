@@ -21,7 +21,7 @@ return new class extends Migration {
               ->nullable()
               ->constrained()
               ->cascadeOnDelete();
-            $table->string('answer');
+            $table->string('text');
             $table->enum('status', ['done', 'not done']);
             $table->timestamps();
         });

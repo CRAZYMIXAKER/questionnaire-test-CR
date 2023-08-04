@@ -3,8 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Answer;
 use App\Models\Question;
+use App\Models\QuestionSurvey;
+use App\Models\Survey;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -17,8 +18,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory(5)->create();
-        Question::factory(5)->create();
-//        Answer::factory(5)->create();
+        $this->call(QuestionSeeder::class);
+        Survey::factory(5)->create();
+        $this->call(QuestionSurveySeeder::class);
+        //        Answer::factory(5)->create();
     }
 
 }
