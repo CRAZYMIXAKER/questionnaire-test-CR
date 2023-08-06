@@ -1,9 +1,5 @@
 <template>
     <div>
-        <div v-show="message" style="position:absolute; top: 10px; padding: 15px;background: #ef4444; color: white">
-            {{ message }}
-        </div>
-
         <div v-if="survey.questions">
             <h1>{{ survey.title }}</h1>
 
@@ -36,8 +32,8 @@
                 <button @click="submitAnswer">
                     {{ currentQuestionIndex === survey.questions.length - 1 ? 'Finish' : 'Submit' }}
                 </button>
-                <button v-show="showPreviousQuestion" @click="goToPreviousQuestion">Предыдущий вопрос</button>
-                <button v-show="showNextQuestion" @click="goToNextQuestion">Следующий вопрос</button>
+                <button v-show="showPreviousQuestion" @click="this.currentQuestionIndex--">Предыдущий вопрос</button>
+                <button v-show="showNextQuestion" @click="this.currentQuestionIndex++">Следующий вопрос</button>
             </div>
         </div>
 
@@ -45,16 +41,14 @@
 </template>
 
 <script>
-
-import SurveySubquestions from '../Components/Surveys/Subquestions.vue';
-import SurveyTextarea from '../Components/Surveys/Textarea.vue';
-import SurveySelect from '../Components/Surveys/Select.vue';
+import SurveySubquestions from '@/Components/Surveys/Subquestions.vue';
+import SurveyTextarea from '@/Components/Surveys/Textarea.vue';
+import SurveySelect from '@/Components/Surveys/Select.vue';
 
 export default {
     components: { SurveySelect, SurveyTextarea, SurveySubquestions },
     data() {
         return {
-            message: '',
             survey: [],
             currentQuestion: '',
             currentQuestionIndex: 0,
@@ -83,31 +77,34 @@ export default {
                 if (this.currentQuestionIndex === this.survey.questions.length - 1) {
                     axios.post('/api/v1/answers', {
                         survey_id: this.survey.id,
-                    }).then(response => {
+                    }).then(() => {
                         this.$router.push('/');
+                        this.$notify({
+                            text: 'Thank you for answering the questions!',
+                            type: 'success',
+                            speed: 1000,
+                            duration: 5000,
+                        });
                     }).catch(error => console.log(error));
                 } else {
                     this.currentQuestionIndex++;
-                    this.message = '';
                 }
             } else {
                 if (this.currentQuestionIndex === this.survey.questions.length) {
-                    this.message = 'Please answer the current question to finish questionnaire.';
+                    this.$notify({
+                        text: 'Please answer the current question to finish questionnaire.',
+                        type: 'error',
+                        speed: 1000,
+                        duration: 5000,
+                    });
                 } else {
-                    this.message = 'Please answer the current question to move on to the next question.';
+                    this.$notify({
+                        text: 'Please answer the current question to move on to the next question.',
+                        type: 'error',
+                        speed: 1000,
+                        duration: 5000,
+                    });
                 }
-            }
-        },
-        goToNextQuestion() {
-            this.currentQuestionIndex++;
-            this.message = '';
-        },
-        goToPreviousQuestion() {
-            if (this.currentQuestionIndex > 0) {
-                this.currentQuestionIndex--;
-                this.message = '';
-            } else {
-                this.message = 'It\'s first question';
             }
         },
         updateSubquestionAnswer(key, subKey, value) {
@@ -123,11 +120,6 @@ export default {
         },
     },
     watch: {
-        message() {
-            setTimeout(() => {
-                this.message = '';
-            }, 5000);
-        },
         currentQuestionIndex() {
             this.showNextQuestion = !!(
                 this.currentQuestionIndex < this.survey.questions.length &&
