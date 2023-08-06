@@ -45,12 +45,6 @@ class AnswerController extends Controller
             );
         }
 
-        Answer::where([
-            ['survey_id', '=', request('survey_id')],
-            ['user_id', '=', $preparedAnswer['user_id'] ?? null],
-            ['session_id', '=', $preparedAnswer['session_id'] ?? null],
-        ])->update(['status' => 'not done']);
-
         if (isset($preparedAnswer['user_id']) ||
             isset($preparedAnswer['session_id'])) {
             Answer::updateOrCreate([

@@ -9,33 +9,28 @@
 
             <label>{{ currentQuestion }}</label>
             <div v-for="(question, key) in survey.questions">
-                <div v-if="question.type === 'textarea'" v-show="currentQuestionIndex === key" :key="question.id">
-                    <textarea v-model="answeredQuestions[key]"/>
-                </div>
-                <div v-if="question.type === 'select'" v-show="currentQuestionIndex === key" :key="question.id">
-                    <select
-                        id="country"
-                        v-model="answeredQuestions[key]"
-                        :value="answeredQuestions[key]"
-                        class="form-select"
-                        name="country">
-                        <option disabled>Choose Answer</option>
-                        <option
-                            v-for="nesting in question.nestings"
-                            :key="nesting.id"
-                            :value="nesting.id">
-                            {{ nesting.text }}
-                        </option>
-                    </select>
-                </div>
-                <div v-if="question.type === 'subquestion'" v-show="currentQuestionIndex === key" :key="question.id">
-                    <div v-for="(subquestion, subKey) in question.nestings" :key="subquestion.id">
-                        <label>{{ subquestion.text }}</label>
-                        <input
-                            type="number"
-                            @input="updateSubquestionAnswer(key, subKey, $event.target.value)">
-                    </div>
-                </div>
+                <survey-textarea
+                    v-if="question.type === 'textarea'"
+                    v-show="currentQuestionIndex === key"
+                    :key="question.id"
+                    :value="answeredQuestions[key]"
+                    @update-textarea-answer="answeredQuestions[key] = $event"
+                />
+                <survey-select
+                    v-if="question.type === 'select'"
+                    v-show="currentQuestionIndex === key"
+                    :key="question.id"
+                    :select="question.nestings"
+                    :value="answeredQuestions[key]"
+                    @update-select-answer="answeredQuestions[key] = $event"
+                />
+                <survey-subquestions
+                    v-if="question.type === 'subquestion'"
+                    v-show="currentQuestionIndex === key"
+                    :key="question.id"
+                    :subquestions="question.nestings"
+                    @update-subquestion-answer="updateSubquestionAnswer(key, $event, $event)"
+                />
             </div>
             <div>
                 <button @click="submitAnswer">
@@ -51,7 +46,12 @@
 
 <script>
 
+import SurveySubquestions from '../Components/Surveys/Subquestions.vue';
+import SurveyTextarea from '../Components/Surveys/Textarea.vue';
+import SurveySelect from '../Components/Surveys/Select.vue';
+
 export default {
+    components: { SurveySelect, SurveyTextarea, SurveySubquestions },
     data() {
         return {
             message: '',
@@ -78,15 +78,15 @@ export default {
                     survey_id: this.survey.id,
                     question_id: this.survey.questions[this.currentQuestionIndex].id,
                     answer: this.answeredQuestions[this.currentQuestionIndex],
-                }).then(res => console.log(res)).catch(error => console.log(error));
+                }).catch(error => console.log(error));
 
                 if (this.currentQuestionIndex === this.survey.questions.length - 1) {
-                    console.log('finish');
                     axios.post('/api/v1/answers', {
                         survey_id: this.survey.id,
-                    });
+                    }).then(response => {
+                        this.$router.push('/');
+                    }).catch(error => console.log(error));
                 } else {
-                    console.log('not finish');
                     this.currentQuestionIndex++;
                     this.message = '';
                 }
@@ -140,20 +140,6 @@ export default {
     mounted() {
         this.getQuestions();
         this.getTemporaryAnswers();
-    },
-    computed: {
-        // showNext() {
-        //     this.showNextQuestion = !!(
-        //         this.currentQuestionIndex < this.survey.questions.length &&
-        //         this.answeredQuestions[this.currentQuestionIndex + 1]
-        //     );
-        // },
-        // showPrevious() {
-        //     this.showPreviousQuestion = this.currentQuestionIndex > 0;
-        // },
-        // updateCurrentQuestion() {
-        //     this.currentQuestion = this.survey.questions[this.currentQuestionIndex].text;
-        // },
     },
 };
 </script>

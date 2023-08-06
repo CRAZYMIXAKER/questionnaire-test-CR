@@ -23,7 +23,6 @@ class SurveyController extends Controller
             return $question;
         });
 
-        //                var_dump($aa);
         return response()->json($survey);
     }
 
