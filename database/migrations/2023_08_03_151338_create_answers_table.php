@@ -13,16 +13,19 @@ return new class extends Migration {
     {
         Schema::create('answers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('survey_id')
+                ->constrained()
+                ->cascadeOnDelete();
             $table->foreignId('question_id')
-              ->constrained()
-              ->cascadeOnDelete();
-            $table->string('session_id')->nullable();
+                ->constrained()
+                ->cascadeOnDelete();
             $table->foreignId('user_id')
-              ->nullable()
-              ->constrained()
-              ->cascadeOnDelete();
-            $table->string('text');
-            $table->enum('status', ['done', 'not done']);
+                ->nullable()
+                ->constrained()
+                ->cascadeOnDelete();
+            $table->text('session_id')->nullable();
+            $table->string('answer');
+            $table->enum('status', ['done', 'not done'])->default('not done');
             $table->timestamps();
         });
     }

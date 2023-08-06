@@ -20,7 +20,7 @@ class QuestionSeeder extends Seeder
             [
                 'text' => 'Question 4',
                 'type' => 'select',
-                'nesting' => [
+                'nestings' => [
                     ['text' => 'Question 4 / Select 1'],
                     ['text' => 'Question 4 / Select 2'],
                     ['text' => 'Question 4 / Select 3'],
@@ -29,7 +29,7 @@ class QuestionSeeder extends Seeder
             [
                 'text' => 'Question 5',
                 'type' => 'subquestion',
-                'nesting' => [
+                'nestings' => [
                     ['text' => 'Question 5 / Subquestion 1'],
                     ['text' => 'Question 5 / Subquestion 2'],
                     ['text' => 'Question 5 / Subquestion 3'],
@@ -44,8 +44,8 @@ class QuestionSeeder extends Seeder
                     'type' => $question['type'],
                 ]);
 
-                if (isset($question['nesting'])) {
-                    foreach ($question['nesting'] as $nesting) {
+                if (isset($question['nestings'])) {
+                    foreach ($question['nestings'] as $nesting) {
                         Question::create([
                                 'text' => $nesting['text'],
                                 'type' => $newQuestion->type,

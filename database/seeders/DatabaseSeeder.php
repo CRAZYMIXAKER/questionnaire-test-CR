@@ -3,8 +3,6 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Question;
-use App\Models\QuestionSurvey;
 use App\Models\Survey;
 use App\Models\User;
 use Illuminate\Database\Seeder;

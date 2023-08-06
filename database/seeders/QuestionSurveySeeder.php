@@ -18,7 +18,9 @@ class QuestionSurveySeeder extends Seeder
         foreach (Survey::all() as $survey) {
             for ($i = 0; $i < 3; $i++) {
                 QuestionSurvey::create([
-                    'question_id' => Question::inRandomOrder()->value('id'),
+                    'question_id' => Question::where('parent_id', null)
+                        ->inRandomOrder()
+                        ->value('id'),
                     'survey_id' => $survey->id,
                 ]);
             }

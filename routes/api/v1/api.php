@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\AnswerController;
+use App\Http\Controllers\Api\SurveyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +19,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/surveys/{survey}', [SurveyController::class, 'get']);
+Route::post('/answers', [AnswerController::class, 'store']);
+Route::post('/answers/temporary', [AnswerController::class, 'storeTemporary']);
+Route::get('/answers/temporary/{survey_id}', [AnswerController::class, 'show']);
