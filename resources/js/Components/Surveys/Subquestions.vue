@@ -6,6 +6,7 @@
                 :max="5"
                 :min="1"
                 :step="1"
+                :value="values[key]"
                 type="number"
                 @input="updateSubquestionAnswer(key, $event.target.value)"
             >
@@ -17,6 +18,10 @@
 export default {
     name: 'SurveySubquestions',
     props: {
+        values: {
+            type: [Object, String],
+            default: '',
+        },
         subquestions: {
             type: Object,
             required: true,

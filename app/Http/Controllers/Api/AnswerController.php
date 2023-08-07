@@ -13,32 +13,14 @@ class AnswerController extends Controller
 {
 
     /**
-     * @param $response
-     *
-     * @return string
-     */
-    private static function generateSurveySession(&$response): string
-    {
-        if ($surveySession = request()->cookie('survey_session')) {
-            return $surveySession;
-        }
-
-        $surveySession = Uuid::uuid4()->toString();
-        $cookie = cookie('survey_session', $surveySession, 7 * 24 * 60);
-        $response = $response->json()->withCookie($cookie);
-
-        return $surveySession;
-    }
-
-    /**
      * @return array{user_id: int|null|string, session_id: null|string}
      */
-    private static function getUserData(&$response): array
+    private static function getUserData(): array
     {
         if (Auth::check()) {
             $userId = Auth::id();
         } else {
-            $sessionId = self::generateSurveySession($response);
+            $sessionId = request()->cookie('survey_session');
         }
 
         return [
@@ -52,8 +34,7 @@ class AnswerController extends Controller
      */
     public function store(): JsonResponse
     {
-        $response = response();
-        $userData = self::getUserData($response);
+        $userData = self::getUserData();
 
         Answer::where([
             ['survey_id', '=', request('survey_id')],
@@ -64,13 +45,9 @@ class AnswerController extends Controller
         return response()->json('');
     }
 
-    /**
-     * @return \Illuminate\Support\Facades\Response
-     */
-    public function storeTemporaryAnswer(): Response
+    public function storeTemporaryAnswer()
     {
-        $response = response();
-        $userData = self::getUserData($response);
+        $userData = self::getUserData();
         $preparedAnswer = is_array(request('answer')) ?
             json_encode(request('answer')) :
             request('answer');
@@ -84,8 +61,7 @@ class AnswerController extends Controller
             'status' => 'not done',
         ];
 
-        if (isset($answer['user_id']) ||
-            isset($answer['session_id'])) {
+        if ($answer['user_id'] || $answer['session_id']) {
             Answer::updateOrCreate([
                 'survey_id' => $answer['survey_id'],
                 'question_id' => $answer['question_id'],
@@ -102,10 +78,10 @@ class AnswerController extends Controller
                 ['session_id', '=', $answer['session_id']],
             ])->update(['status' => 'not done']);
 
-            return $response;
+            return response()->json('Fine');
         }
 
-        return $response->json(['error' => "Can't find any user data"]);
+        return response()->json(['error' => "Can't find any user data"]);
     }
 
     /**
@@ -113,8 +89,7 @@ class AnswerController extends Controller
      */
     public function getAnswers(): Response|JsonResponse
     {
-        $response = response();
-        $userData = self::getUserData($response);
+        $userData = self::getUserData();
 
         $answers = Answer::where([
             ['survey_id', '=', request('survey_id')],
