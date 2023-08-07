@@ -1,7 +1,11 @@
 <template>
     <div class="textarea">
         <div class="textarea__body">
-            <textarea class="textarea" @input="$emit('update-textarea-answer', $event.target.value)"/>
+            <textarea
+                :value="value"
+                class="textarea"
+                @input="$emit('update-textarea-answer', $event.target.value)"
+            />
         </div>
     </div>
 </template>
@@ -12,7 +16,7 @@ export default {
     props: {
         value: {
             type: String,
-            default: ''
+            default: '',
         },
         modelValue: {
             type: String,

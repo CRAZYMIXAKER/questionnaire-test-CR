@@ -22,5 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/surveys/{survey}', [SurveyController::class, 'get']);
 Route::post('/answers', [AnswerController::class, 'store']);
-Route::post('/answers/temporary', [AnswerController::class, 'storeTemporary']);
-Route::get('/answers/temporary/{survey_id}', [AnswerController::class, 'show']);
+Route::post('/answers/temporary', [AnswerController::class, 'storeTemporaryAnswer']);
+Route::get('/answers/temporary/{survey_id}', [AnswerController::class, 'getAnswers']);

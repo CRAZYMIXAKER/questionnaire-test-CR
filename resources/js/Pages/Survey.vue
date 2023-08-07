@@ -9,7 +9,7 @@
                     v-if="question.type === 'textarea'"
                     v-show="currentQuestionIndex === key"
                     :key="question.id"
-                    :value="answeredQuestions[key]??''"
+                    :value="answeredQuestions[key] ?? ''"
                     @update-textarea-answer="answeredQuestions[key] = $event"
                 />
                 <survey-select
@@ -25,6 +25,7 @@
                     v-show="currentQuestionIndex === key"
                     :key="question.id"
                     :subquestions="question.nestings"
+                    :values="answeredQuestions[key] ?? ''"
                     @update-subquestion-answer="updateSubquestionAnswer(key, $event.key, $event.value)"
                 />
             </div>
@@ -153,25 +154,29 @@ export default {
             }
             this.answeredQuestions[key][subKey] = value;
         },
-        getTemporaryAnswers() {
-            axios.get(`/answers/temporary/${this.$route.params.id}`)
-                .then(res => console.log(res))
-                .catch(error => console.log(error));
+        getAnswers() {
+            axios.get(`/api/v1/answers/temporary/${this.$route.params.id}`).then(response => {
+                this.answeredQuestions = response.data;
+            }).catch(error => console.log(error));
         },
     },
-    watch: {
-        currentQuestionIndex() {
+    computed: {
+        showButtonNext() {
             this.showNextQuestion = !!(
                 this.currentQuestionIndex < this.survey.questions.length &&
                 this.answeredQuestions[this.currentQuestionIndex + 1]
             );
+        },
+        showButtonPrevious() {
             this.showPreviousQuestion = this.currentQuestionIndex > 0;
+        },
+        updateCurrentQuestion() {
             this.currentQuestion = this.survey.questions[this.currentQuestionIndex].text;
         },
     },
     mounted() {
         this.getQuestions();
-        this.getTemporaryAnswers();
+        this.getAnswers();
     },
 };
 </script>
