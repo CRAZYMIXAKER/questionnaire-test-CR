@@ -18,7 +18,7 @@ const routes = [
                 },
             },
             {
-                path: 'survey/:id',
+                path: 'survey/:survey_id',
                 name: 'survey',
                 components: {
                     default: Survey,

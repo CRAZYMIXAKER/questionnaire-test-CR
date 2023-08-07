@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Exceptions\NotFoundException;
+use App\Http\Requests\Answer\GetAnswersBySurveyIdRequest;
 use App\Models\Answer;
 use App\Services\AnswerService;
 use Exception;
@@ -71,13 +73,17 @@ class AnswerController extends ApiController
     }
 
     /**
+     * @param  \App\Http\Requests\Answer\GetAnswersBySurveyIdRequest  $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getAnswersBySurveyId(): JsonResponse
-    {
+    public function getAnswersBySurveyId(GetAnswersBySurveyIdRequest $request
+    ): JsonResponse {
+        $validatedParams = $request->validated();
+
         try {
             $answers = $this->answerService->getAnswersBySurveyId(
-                (int)request('survey_id')
+                (int)$validatedParams['survey_id']
             );
             return $this->successResponse(['answers' => $answers]);
         } catch (Exception) {

@@ -60,7 +60,7 @@ export default {
     },
     methods: {
         getQuestions() {
-            axios.get(`/api/v1/surveys/${this.$route.params.id}`).then(res => {
+            axios.get(`/api/v1/surveys/${this.$route.params.survey_id}`).then(res => {
                 this.survey = res.data;
                 this.currentQuestion = this.survey.questions[0].text;
             }).catch(error => {
@@ -155,9 +155,11 @@ export default {
             this.answeredQuestions[key][subKey] = value;
         },
         getAnswers() {
-            axios.get(`/api/v1/answers/temporary/${this.$route.params.id}`).then(response => {
-                this.answeredQuestions = response.data.data.answers;
-            }).catch(error => console.log(error));
+            axios.get(`/api/v1/answers/temporary/${this.$route.params.survey_id}`)
+                .then(response => {
+                    this.answeredQuestions = response.data.data.answers;
+                })
+                .catch(error => console.log(error));
         },
     },
     mounted() {

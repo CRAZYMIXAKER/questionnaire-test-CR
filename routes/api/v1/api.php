@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/surveys/{survey}', [SurveyController::class, 'show']);
+
 Route::middleware('survey.session')->group(function () {
     Route::post('/answers', [AnswerController::class, 'store']);
     Route::post(
