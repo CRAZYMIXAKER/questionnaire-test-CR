@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Api\AnswerController;
-use App\Http\Controllers\Api\SurveyController;
+use App\Http\Controllers\Api\V1\AnswerController;
+use App\Http\Controllers\Api\V1\SurveyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/surveys/{survey}', [SurveyController::class, 'get']);
+Route::get('/surveys/{survey}', [SurveyController::class, 'show']);
 Route::middleware('survey.session')->group(function () {
     Route::post('/answers', [AnswerController::class, 'store']);
     Route::post(
@@ -29,6 +29,6 @@ Route::middleware('survey.session')->group(function () {
     );
     Route::get(
         '/answers/temporary/{survey_id}',
-        [AnswerController::class, 'getAnswers']
+        [AnswerController::class, 'getAnswersBySurveyId']
     );
 });

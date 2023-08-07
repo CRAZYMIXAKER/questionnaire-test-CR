@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Models\Question;
@@ -9,7 +11,7 @@ use App\Models\Survey;
 class SurveyController extends Controller
 {
 
-    public function get(Survey $survey)
+    public function show(Survey $survey)
     {
         $questions = $survey->questions;
         $questionIds = $questions->pluck('id')->toArray();

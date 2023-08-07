@@ -156,9 +156,13 @@ export default {
         },
         getAnswers() {
             axios.get(`/api/v1/answers/temporary/${this.$route.params.id}`).then(response => {
-                this.answeredQuestions = response.data;
+                this.answeredQuestions = response.data.data.answers;
             }).catch(error => console.log(error));
         },
+    },
+    mounted() {
+        this.getQuestions();
+        this.getAnswers();
     },
     computed: {
         showButtonNext() {
@@ -173,10 +177,6 @@ export default {
         updateCurrentQuestion() {
             this.currentQuestion = this.survey.questions[this.currentQuestionIndex].text;
         },
-    },
-    mounted() {
-        this.getQuestions();
-        this.getAnswers();
     },
 };
 </script>

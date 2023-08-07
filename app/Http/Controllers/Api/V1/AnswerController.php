@@ -1,40 +1,26 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+declare(strict_types=1);
 
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers\Api\V1;
+
 use App\Models\Answer;
+use App\Services\AnswerService;
+use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Response;
-use Ramsey\Uuid\Uuid;
 
-class AnswerController extends Controller
+class AnswerController extends ApiController
 {
 
-    /**
-     * @return array{user_id: int|null|string, session_id: null|string}
-     */
-    private static function getUserData(): array
-    {
-        if (Auth::check()) {
-            $userId = Auth::id();
-        } else {
-            $sessionId = request()->cookie('survey_session');
-        }
-
-        return [
-            'user_id' => $userId ?? null,
-            'session_id' => $sessionId ?? null,
-        ];
-    }
+    public function __construct(private readonly AnswerService $answerService
+    ) {}
 
     /**
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(): JsonResponse
     {
-        $userData = self::getUserData();
+        $userData = AnswerService::getUserData();
 
         Answer::where([
             ['survey_id', '=', request('survey_id')],
@@ -47,7 +33,7 @@ class AnswerController extends Controller
 
     public function storeTemporaryAnswer()
     {
-        $userData = self::getUserData();
+        $userData = AnswerService::getUserData();
         $preparedAnswer = is_array(request('answer')) ?
             json_encode(request('answer')) :
             request('answer');
@@ -85,23 +71,18 @@ class AnswerController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse|\Illuminate\Support\Facades\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function getAnswers(): Response|JsonResponse
+    public function getAnswersBySurveyId(): JsonResponse
     {
-        $userData = self::getUserData();
-
-        $answers = Answer::where([
-            ['survey_id', '=', request('survey_id')],
-            ['user_id', '=', $userData['user_id']],
-            ['session_id', '=', $userData['session_id']],
-        ])->get();
-
-        $answers = $answers->map(function ($answer) {
-            return json_decode($answer->answer) ?? $answer->answer;
-        });
-
-        return response()->json($answers);
+        try {
+            $answers = $this->answerService->getAnswersBySurveyId(
+                (int)request('survey_id')
+            );
+            return $this->successResponse(['answers' => $answers]);
+        } catch (Exception) {
+            return $this->serverErrorResponse();
+        }
     }
 
 }
