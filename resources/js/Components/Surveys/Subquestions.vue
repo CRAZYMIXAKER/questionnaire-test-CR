@@ -1,8 +1,14 @@
 <template>
     <div>
-        <div v-for="(subquestion, subKey) in subquestions" :key="subquestion.id">
+        <div v-for="(subquestion, key) in subquestions" :key="subquestion.id">
             <label>{{ subquestion.text }}</label>
-            <input type="number" @input="updateSubquestionAnswer(subKey, $event.target.value)">
+            <input
+                :max="5"
+                :min="1"
+                :step="1"
+                type="number"
+                @input="updateSubquestionAnswer(key, $event.target.value)"
+            >
         </div>
     </div>
 </template>
@@ -17,8 +23,19 @@ export default {
         },
     },
     methods: {
-        updateSubquestionAnswer(subKey, value) {
-            this.$emit('update-subquestion-answer', subKey, value);
+        updateSubquestionAnswer(key, value) {
+            if (/^[1-5]$/.test(value)) {
+                this.$emit('update-subquestion-answer', { key, value });
+            } else {
+                event.target.value = '';
+                this.$emit('update-subquestion-answer', { key, value: '' });
+                this.$notify({
+                    text: 'Please only enter numbers between 1 and 5.',
+                    type: 'error',
+                    speed: 1000,
+                    duration: 5000,
+                });
+            }
         },
     },
 };

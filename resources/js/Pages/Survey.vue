@@ -9,7 +9,7 @@
                     v-if="question.type === 'textarea'"
                     v-show="currentQuestionIndex === key"
                     :key="question.id"
-                    :value="answeredQuestions[key]"
+                    :value="answeredQuestions[key]??''"
                     @update-textarea-answer="answeredQuestions[key] = $event"
                 />
                 <survey-select
@@ -17,7 +17,7 @@
                     v-show="currentQuestionIndex === key"
                     :key="question.id"
                     :select="question.nestings"
-                    :value="answeredQuestions[key]"
+                    :value="answeredQuestions[key] ?? ''"
                     @update-select-answer="answeredQuestions[key] = $event"
                 />
                 <survey-subquestions
@@ -25,7 +25,7 @@
                     v-show="currentQuestionIndex === key"
                     :key="question.id"
                     :subquestions="question.nestings"
-                    @update-subquestion-answer="updateSubquestionAnswer(key, $event, $event)"
+                    @update-subquestion-answer="updateSubquestionAnswer(key, $event.key, $event.value)"
                 />
             </div>
             <div>
@@ -67,45 +67,85 @@ export default {
             });
         },
         submitAnswer() {
-            if (this.answeredQuestions[this.currentQuestionIndex]) {
-                axios.post('/api/v1/answers/temporary', {
-                    survey_id: this.survey.id,
-                    question_id: this.survey.questions[this.currentQuestionIndex].id,
-                    answer: this.answeredQuestions[this.currentQuestionIndex],
-                }).catch(error => console.log(error));
+            let currentAnswer = this.answeredQuestions[this.currentQuestionIndex];
+            let currentQuestion = this.survey.questions[this.currentQuestionIndex];
+            let checkAnswer = this.checkAnswer(currentAnswer, currentQuestion);
 
-                if (this.currentQuestionIndex === this.survey.questions.length - 1) {
-                    axios.post('/api/v1/answers', {
-                        survey_id: this.survey.id,
-                    }).then(() => {
-                        this.$router.push('/');
-                        this.$notify({
-                            text: 'Thank you for answering the questions!',
-                            type: 'success',
-                            speed: 1000,
-                            duration: 5000,
-                        });
-                    }).catch(error => console.log(error));
-                } else {
-                    this.currentQuestionIndex++;
-                }
+            if (!checkAnswer) {
+                return false;
+            }
+
+            axios.post('/api/v1/answers/temporary', {
+                survey_id: this.survey.id,
+                question_id: currentQuestion.id,
+                answer: currentAnswer,
+            }).catch(error => console.log(error));
+
+            if (this.currentQuestionIndex === this.survey.questions.length - 1) {
+                axios.post('/api/v1/answers', {
+                    survey_id: this.survey.id,
+                }).then(() => {
+                    this.$router.push('/');
+                    this.$notify({
+                        text: 'Thank you for answering the questions!',
+                        type: 'success',
+                        speed: 1000,
+                        duration: 5000,
+                    });
+                }).catch(error => console.log(error));
             } else {
-                if (this.currentQuestionIndex === this.survey.questions.length) {
+                this.currentQuestionIndex++;
+            }
+        },
+        checkAnswer(currentAnswer, currentQuestion) {
+            let checkLastQuestionStep = this.currentQuestionIndex === this.survey.questions.length - 1;
+
+            if (!currentAnswer && checkLastQuestionStep) {
+                this.$notify({
+                    text: 'Please answer the current question to finish questionnaire.',
+                    type: 'error',
+                    speed: 1000,
+                    duration: 5000,
+                });
+                return false;
+            }
+
+            if (!currentAnswer && !checkLastQuestionStep) {
+                this.$notify({
+                    text: 'Please answer the current question to move on to the next question.',
+                    type: 'error',
+                    speed: 1000,
+                    duration: 5000,
+                });
+                return false;
+            }
+
+            if (currentQuestion.type === 'subquestion') {
+                let currentSubquestionsAnswers = Object.values(currentAnswer);
+                let countCurrentSubquestionsQuestions = Object.keys(currentQuestion.nestings).length;
+
+                if (countCurrentSubquestionsQuestions !== currentSubquestionsAnswers.length) {
                     this.$notify({
-                        text: 'Please answer the current question to finish questionnaire.',
+                        text: 'Please answer all the sub-questions of this question.',
                         type: 'error',
                         speed: 1000,
                         duration: 5000,
                     });
-                } else {
+                    return false;
+                }
+
+                if (!currentSubquestionsAnswers.every(value => !!value)) {
                     this.$notify({
-                        text: 'Please answer the current question to move on to the next question.',
+                        text: 'Please only enter numbers between 1 and 5.',
                         type: 'error',
                         speed: 1000,
                         duration: 5000,
                     });
+                    return false;
                 }
             }
+
+            return true;
         },
         updateSubquestionAnswer(key, subKey, value) {
             if (!this.answeredQuestions[key]) {
