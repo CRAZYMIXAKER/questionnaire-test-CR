@@ -27,6 +27,22 @@ class AnswerService
     /**
      * @param  int  $surveyId
      *
+     * @return void
+     */
+    public function storeAnswer(int $surveyId): void
+    {
+        $userData = self::getUserData();
+
+        Answer::where([
+            ['survey_id', '=', $surveyId],
+            ['user_id', '=', $userData['user_id']],
+            ['session_id', '=', $userData['session_id']],
+        ])->update(['status' => 'done']);
+    }
+
+    /**
+     * @param  int  $surveyId
+     *
      * @return mixed
      */
     public function getAnswersBySurveyId(int $surveyId): mixed

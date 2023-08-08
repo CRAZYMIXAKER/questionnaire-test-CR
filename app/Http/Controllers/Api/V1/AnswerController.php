@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Exceptions\NotFoundException;
 use App\Http\Requests\Answer\GetAnswersBySurveyIdRequest;
+use App\Http\Requests\Answer\StoreAnswerRequest;
 use App\Models\Answer;
 use App\Services\AnswerService;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class AnswerController extends ApiController
 {
@@ -18,19 +19,24 @@ class AnswerController extends ApiController
     ) {}
 
     /**
+     * @param  \App\Http\Requests\Answer\StoreAnswerRequest  $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(): JsonResponse
+    public function store(StoreAnswerRequest $request): JsonResponse
     {
-        $userData = AnswerService::getUserData();
+        $validatedParams = $request->validated();
 
-        Answer::where([
-            ['survey_id', '=', request('survey_id')],
-            ['user_id', '=', $userData['user_id']],
-            ['session_id', '=', $userData['session_id']],
-        ])->update(['status' => 'done']);
-
-        return response()->json('');
+        try {
+            $this->answerService->storeAnswer(
+                (int)$validatedParams['survey_id']
+            );
+            return $this->successResponse(
+                code: Response::HTTP_CREATED,
+            );
+        } catch (Exception) {
+            return $this->serverErrorResponse();
+        }
     }
 
     public function storeTemporaryAnswer()
