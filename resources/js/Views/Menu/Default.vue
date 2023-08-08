@@ -9,7 +9,3 @@ export default {
     name: 'MenuDefault',
 };
 </script>
-
-<style lang="scss" scoped>
-
-</style>

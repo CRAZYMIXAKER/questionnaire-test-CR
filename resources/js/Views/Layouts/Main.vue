@@ -20,14 +20,6 @@ export default {
             user: window.Laravel.user,
         };
     },
-    // computed: {
-    //     user: () => {
-    //         return window.Laravel.user || null;
-    //     },
-    // },
 };
 </script>
 
-<style lang="scss" scoped>
-
-</style>
