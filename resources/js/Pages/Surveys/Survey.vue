@@ -87,7 +87,7 @@ export default {
                     axios.post('/api/v1/answers', {
                         survey_id: this.survey.id,
                     }).then(() => {
-                        this.$router.push('/');
+                        this.$router.push(`/survey/${this.$route.params.survey_id}/answers`);
                         this.$notify({
                             text: 'Thank you for answering the questions!',
                             type: 'success',
@@ -157,7 +157,7 @@ export default {
             this.answeredQuestions[key][subKey] = value;
         },
         getAnswers() {
-            axios.get(`/api/v1/answers/temporary/${this.$route.params.survey_id}`)
+            axios.get(`/api/v1/answers/${this.$route.params.survey_id}`)
                 .then(response => {
                     this.answeredQuestions = response.data.data.answers;
                 })

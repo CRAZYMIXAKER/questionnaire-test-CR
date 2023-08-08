@@ -109,4 +109,23 @@ class AnswerService
         });
     }
 
+    public function getModifiedAnswersBySurveyId(int $surveyId)
+    {
+        $userData = self::getUserData();
+
+        $answers = Answer::where([
+            ['survey_id', '=', $surveyId],
+            ['user_id', '=', $userData['user_id']],
+            ['session_id', '=', $userData['session_id']],
+        ])->get();
+
+        return $answers->map(function ($answer) {
+            if ($answer->question->type === 'select') {
+                return $answer->question->text;
+            }
+
+            return json_decode($answer->answer) ?? $answer->answer;
+        });
+    }
+
 }

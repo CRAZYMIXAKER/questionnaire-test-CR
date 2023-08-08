@@ -29,7 +29,11 @@ Route::middleware('survey.session')->group(function () {
         [AnswerController::class, 'storeTemporaryAnswer']
     );
     Route::get(
-        '/answers/temporary/{survey_id}',
+        '/answers/{survey_id}',
         [AnswerController::class, 'getAnswersBySurveyId']
+    );
+    Route::get(
+        '/surveys/{survey_id}/answers',
+        [AnswerController::class, 'getModifiedAnswersBySurveyId']
     );
 });

@@ -19,4 +19,9 @@ class Answer extends Model
         'answer',
         'status',
     ];
+
+    public function question()
+    {
+        return $this->belongsTo(Question::class);
+    }
 }

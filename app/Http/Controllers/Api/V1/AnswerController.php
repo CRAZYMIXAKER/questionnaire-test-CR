@@ -77,4 +77,24 @@ class AnswerController extends ApiController
             return $this->serverErrorResponse();
         }
     }
+
+    /**
+     * @param  \App\Http\Requests\Answer\GetAnswersBySurveyIdRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getModifiedAnswersBySurveyId(
+        GetAnswersBySurveyIdRequest $request
+    ): JsonResponse {
+        $validatedParams = $request->validated();
+
+        try {
+            $answers = $this->answerService->getModifiedAnswersBySurveyId(
+                (int)$validatedParams['survey_id']
+            );
+            return $this->successResponse(['answers' => $answers]);
+        } catch (Exception) {
+            return $this->serverErrorResponse();
+        }
+    }
 }
