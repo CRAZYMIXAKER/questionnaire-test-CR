@@ -2,8 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 import MainLayout from '@/Views/Layouts/Main';
 import SidebarDefault from '@/Views/Menu/Default';
 import Home from '@/Pages/Home';
-import Survey from '@/Pages/Surveys/Survey';
+import SurveysShow from '@/Pages/Surveys/Show';
 import SurveyAnswers from '@/Pages/Surveys/SurveyAnswers';
+import SurveysIndex from '@/Pages/Surveys/Index';
 
 const routes = [
     {
@@ -19,15 +20,23 @@ const routes = [
                 },
             },
             {
-                path: 'survey/:survey_id',
-                name: 'survey',
+                path: 'surveys',
+                name: 'surveys.index',
                 components: {
-                    default: Survey,
+                    default: SurveysIndex,
                     menu: SidebarDefault,
                 },
             },
             {
-                path: 'survey/:survey_id/answers',
+                path: 'surveys/:survey_id',
+                name: 'surveys.show',
+                components: {
+                    default: SurveysShow,
+                    menu: SidebarDefault,
+                },
+            },
+            {
+                path: 'surveys/:survey_id/answers',
                 name: 'survey.answers',
                 components: {
                     default: SurveyAnswers,

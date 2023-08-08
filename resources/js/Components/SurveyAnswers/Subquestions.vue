@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import SurveyAnswersItem from './Item.vue';
+import SurveyAnswersItem from '@/Components/SurveyAnswers/Item.vue';
 
 export default {
     name: 'SurveyAnswersSubquestions',
@@ -32,7 +32,3 @@ export default {
     },
 };
 </script>
-
-<style lang="scss" scoped>
-
-</style>

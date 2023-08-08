@@ -37,7 +37,6 @@
                 <button v-show="showNextQuestion" @click="this.currentQuestionIndex++">Следующий вопрос</button>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -87,7 +86,7 @@ export default {
                     axios.post('/api/v1/answers', {
                         survey_id: this.survey.id,
                     }).then(() => {
-                        this.$router.push(`/survey/${this.$route.params.survey_id}/answers`);
+                        this.$router.push(`/surveys/${this.$route.params.survey_id}/answers`);
                         this.$notify({
                             text: 'Thank you for answering the questions!',
                             type: 'success',

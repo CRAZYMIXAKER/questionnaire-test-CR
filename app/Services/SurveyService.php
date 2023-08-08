@@ -7,9 +7,24 @@ namespace App\Services;
 use App\Exceptions\NotFoundException;
 use App\Models\Question;
 use App\Models\Survey;
+use Illuminate\Database\Eloquent\Collection;
 
 class SurveyService
 {
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     * @throws \App\Exceptions\NotFoundException
+     */
+    public function getAll(): Collection
+    {
+        $surveys = Survey::all();
+
+        if ($surveys->isEmpty()) {
+            throw new NotFoundException('Surveys not found.');
+        }
+
+        return $surveys;
+    }
 
     /**
      * @param  int  $surveyId
@@ -47,7 +62,6 @@ class SurveyService
     {
         $survey = Survey::find($surveyId);
         if (!$survey) {
-
             throw new NotFoundException(
                 sprintf('Not found survey with id %d.', $surveyId),
             );
@@ -55,5 +69,4 @@ class SurveyService
 
         return $survey;
     }
-
 }

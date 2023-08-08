@@ -1,13 +1,12 @@
 <template>
-    <div class="survey-question-select">
-        <h3>Select: <span>{{ question }}</span></h3>
-        <p>Answer: {{ answer }}</p>
+    <div class="survey-question-textarea">
+        <h3><span>{{ question }}</span>: {{ answer }}</h3>
     </div>
 </template>
 
 <script>
 export default {
-    name: 'SurveyAnswersSelect',
+    name: 'SurveyAnswersArea',
     props: {
         question: {
             type: String,

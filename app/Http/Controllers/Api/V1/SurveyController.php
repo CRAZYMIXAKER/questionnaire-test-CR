@@ -17,6 +17,24 @@ class SurveyController extends ApiController
     ) {}
 
     /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index(): JsonResponse
+    {
+        try {
+            $surveys = $this->surveyService->getAll();
+            return $this->successResponse(['surveys' => $surveys]);
+        } catch (NotFoundException $error) {
+            return $this->clientErrorsResponse(
+                message: $error->getMessage(),
+                code: Response::HTTP_NOT_FOUND,
+            );
+        } catch (Exception) {
+            return $this->serverErrorResponse();
+        }
+    }
+
+    /**
      * @param  \App\Http\Requests\Survey\SurveyRequest  $request
      *
      * @return \Illuminate\Http\JsonResponse

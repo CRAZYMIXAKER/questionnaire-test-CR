@@ -8,7 +8,7 @@
             <div>
                 <h2>Questions:</h2>
                 <div v-for="(question, key) in survey.questions" :key="question.id">
-                    <SurveyAnswersItem
+                    <SurveyAnswersTextarea
                         v-if="question.type === 'textarea'"
                         :answer="answers[key]"
                         :question="question.text"
@@ -28,7 +28,7 @@
                     />
                 </div>
             </div>
-            <router-link :to="{name: 'survey', survey_id: this.$route.params.survey_id}">
+            <router-link :to="{name: 'surveys.show', params: {survey_id: this.$route.params.survey_id}}">
                 Re-run the questionnaire
             </router-link>
         </div>
@@ -40,12 +40,12 @@
 
 <script>
 
-import SurveyAnswersItem from '../../Components/SurveyAnswers/Item.vue';
-import SurveyAnswersSubquestions from '../../Components/SurveyAnswers/Subquestions.vue';
-import SurveyAnswersSelect from '../../Components/SurveyAnswers/Select.vue';
+import SurveyAnswersTextarea from '@/Components/SurveyAnswers/Textarea.vue';
+import SurveyAnswersSubquestions from '@/Components/SurveyAnswers/Subquestions.vue';
+import SurveyAnswersSelect from '@/Components/SurveyAnswers/Select.vue';
 
 export default {
-    components: { SurveyAnswersSelect, SurveyAnswersSubquestions, SurveyAnswersItem },
+    components: { SurveyAnswersSelect, SurveyAnswersSubquestions, SurveyAnswersTextarea },
     data() {
         return {
             survey: [],

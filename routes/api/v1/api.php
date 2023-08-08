@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/surveys', [SurveyController::class, 'index']);
 Route::get('/surveys/{survey_id}', [SurveyController::class, 'show']);
 
 Route::middleware('survey.session')->group(function () {
