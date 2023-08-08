@@ -16,13 +16,24 @@ class QuestionSurveySeeder extends Seeder
     public function run(): void
     {
         foreach (Survey::all() as $survey) {
+            $existingQuestionIds = QuestionSurvey::where(
+                'survey_id',
+                $survey->id
+            )->pluck('question_id')->toArray();
+
             for ($i = 0; $i < 3; $i++) {
-                QuestionSurvey::create([
-                    'question_id' => Question::where('parent_id', null)
+                do {
+                    $randomQuestionId = Question::where('parent_id', null)
                         ->inRandomOrder()
-                        ->value('id'),
+                        ->value('id');
+                } while (in_array($randomQuestionId, $existingQuestionIds));
+
+                QuestionSurvey::create([
+                    'question_id' => $randomQuestionId,
                     'survey_id' => $survey->id,
                 ]);
+
+                $existingQuestionIds[] = $randomQuestionId; // Добавляем сгенерированный question_id в массив, чтобы следующие итерации не дублировали его
             }
         }
     }
