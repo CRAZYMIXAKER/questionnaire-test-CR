@@ -7,7 +7,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTemporaryAnswerRequest extends FormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -29,5 +28,4 @@ class StoreTemporaryAnswerRequest extends FormRequest
             'answer' => ['required', new ValidAnswer()],
         ];
     }
-
 }

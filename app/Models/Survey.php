@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Survey extends Model
 {
-
     use HasFactory;
 
     protected $table = 'surveys';
@@ -22,5 +21,4 @@ class Survey extends Model
             'question_surveys',
         );
     }
-
 }

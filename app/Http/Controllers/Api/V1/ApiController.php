@@ -11,10 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 class ApiController extends Controller
 {
     public const SERVER_ERROR_MESSAGE = 'There is unexpected error. Please, try again later.';
+
     public const CLIENT_ERROR_MESSAGE = 'There is something wrong with request. Please, try again.';
 
     /**
-     * @param array<mixed> $data
+     * @param  array<mixed>  $data
      */
     final public function successResponse(
         array $data = [],
@@ -28,7 +29,7 @@ class ApiController extends Controller
     }
 
     /**
-     * @param array<mixed> $data
+     * @param  array<mixed>  $data
      */
     final public function clientErrorsResponse(
         array $data = [],
@@ -42,7 +43,7 @@ class ApiController extends Controller
     }
 
     /**
-     * @param array<mixed> $data
+     * @param  array<mixed>  $data
      */
     final public function serverErrorResponse(
         array $data = [],

@@ -163,6 +163,12 @@ export default {
                 })
                 .catch(error => console.log(error));
         },
+        shouldShowNextQuestion() {
+            return !!(
+                this.currentQuestionIndex < this.survey.questions.length &&
+                this.answeredQuestions[this.currentQuestionIndex + 1]
+            );
+        },
     },
     mounted() {
         this.getQuestions();
@@ -170,15 +176,13 @@ export default {
     },
     computed: {
         showButtonNext() {
-            this.showNextQuestion = !!(
-                this.currentQuestionIndex < this.survey.questions.length &&
-                this.answeredQuestions[this.currentQuestionIndex + 1]
-            );
+            this.showNextQuestion = this.shouldShowNextQuestion();
         },
-        showButtonPrevious() {
+    },
+    watch: {
+        currentQuestionIndex() {
+            this.showNextQuestion = this.shouldShowNextQuestion();
             this.showPreviousQuestion = this.currentQuestionIndex > 0;
-        },
-        updateCurrentQuestion() {
             this.currentQuestion = this.survey.questions[this.currentQuestionIndex].text;
         },
     },

@@ -17,8 +17,8 @@ class ValidAnswer implements ValidationRule
         mixed $value,
         Closure $fail
     ): void {
-        if (!is_string($value) && !is_array($value)) {
-            $fail('The :attribute must be a string or an array.');
+        if (!is_string($value) && !is_array($value) && !is_int($value)) {
+            $fail('The :attribute must be a string or an array or number.');
         }
     }
 }

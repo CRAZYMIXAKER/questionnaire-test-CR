@@ -6,7 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class GetAnswersBySurveyIdRequest extends FormRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -36,5 +35,4 @@ class GetAnswersBySurveyIdRequest extends FormRequest
             'survey_id' => request()->survey_id,
         ]);
     }
-
 }

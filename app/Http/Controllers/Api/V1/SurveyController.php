@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SurveyController extends ApiController
 {
-
     public function __construct(private readonly SurveyService $surveyService
     ) {}
 
@@ -40,5 +39,4 @@ class SurveyController extends ApiController
             return $this->serverErrorResponse();
         }
     }
-
 }

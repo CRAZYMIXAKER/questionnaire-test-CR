@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AnswerController extends ApiController
 {
-
     public function __construct(private readonly AnswerService $answerService
     ) {}
 
@@ -78,5 +77,4 @@ class AnswerController extends ApiController
             return $this->serverErrorResponse();
         }
     }
-
 }
