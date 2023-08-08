@@ -4,37 +4,41 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
-use App\Models\Question;
-use App\Models\Survey;
+use App\Exceptions\NotFoundException;
+use App\Http\Requests\Survey\SurveyRequest;
+use App\Services\SurveyService;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
-class SurveyController extends Controller
+class SurveyController extends ApiController
 {
 
-    public function show(Survey $survey)
+    public function __construct(private readonly SurveyService $surveyService
+    ) {}
+
+    /**
+     * @param  \App\Http\Requests\Survey\SurveyRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show(SurveyRequest $request): JsonResponse
     {
-        $questions = $survey->questions;
-        $questionIds = $questions->pluck('id')->toArray();
-        $nestedQuestions = Question::whereIn('parent_id', $questionIds)->get();
+        $validatedParams = $request->validated();
 
-        $questions->transform(function ($question) use ($nestedQuestions) {
-            $question->nestings = $nestedQuestions->where(
-                'parent_id',
-                $question->id
+        try {
+            $survey = $this->surveyService->getSurvey(
+                (int)$validatedParams['survey_id']
             );
-            return $question;
-        });
-
-        return response()->json($survey);
+            return $this->successResponse(['survey' => $survey]);
+        } catch (NotFoundException $error) {
+            return $this->clientErrorsResponse(
+                message: $error->getMessage(),
+                code: Response::HTTP_NOT_FOUND,
+            );
+        } catch (Exception) {
+            return $this->serverErrorResponse();
+        }
     }
 
-    //    public function getAll(): JsonResponse
-    //    {
-    //        try {
-    //            $skills = $this->skillService->getAll();
-    //            return $this->successResponse($skills);
-    //        } catch (Exception) {
-    //            return $this->serverErrorResponse();
-    //        }
-    //    }
 }

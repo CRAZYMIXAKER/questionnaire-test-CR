@@ -60,12 +60,14 @@ export default {
     },
     methods: {
         getQuestions() {
-            axios.get(`/api/v1/surveys/${this.$route.params.survey_id}`).then(res => {
-                this.survey = res.data;
-                this.currentQuestion = this.survey.questions[0].text;
-            }).catch(error => {
-                console.log(error);
-            });
+            axios.get(`/api/v1/surveys/${this.$route.params.survey_id}`)
+                .then(res => {
+                    this.survey = res.data.data.survey;
+                    this.currentQuestion = this.survey.questions[0].text;
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         },
         submitAnswer() {
             let currentAnswer = this.answeredQuestions[this.currentQuestionIndex];

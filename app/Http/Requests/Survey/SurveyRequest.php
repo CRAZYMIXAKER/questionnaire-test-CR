@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Answer;
+namespace App\Http\Requests\Survey;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class GetAnswersBySurveyIdRequest extends FormRequest
+class SurveyRequest extends FormRequest
 {
 
     /**

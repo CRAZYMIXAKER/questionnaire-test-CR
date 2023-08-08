@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Exceptions\NotFoundException;
@@ -9,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 class AnswerService
 {
 
+    /**
+     * @return array{user_id: int|null|string, session_id: array|null|string}
+     */
     public static function getUserData(): array
     {
         if (Auth::check()) {

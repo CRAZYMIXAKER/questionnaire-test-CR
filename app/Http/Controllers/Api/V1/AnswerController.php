@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Exceptions\NotFoundException;
 use App\Http\Requests\Answer\GetAnswersBySurveyIdRequest;
 use App\Http\Requests\Answer\StoreAnswerRequest;
 use App\Http\Requests\Answer\StoreTemporaryAnswerRequest;
@@ -11,7 +12,6 @@ use App\Services\AnswerService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use App\Exceptions\NotFoundException;
 
 class AnswerController extends ApiController
 {
@@ -48,16 +48,14 @@ class AnswerController extends ApiController
     public function storeTemporaryAnswer(StoreTemporaryAnswerRequest $request
     ): JsonResponse {
         try {
-            $answers = $this->answerService->storeTemporaryAnswer(
-                $request->validated()
-            );
-            return $this->successResponse(['answers' => $answers]);
+            $this->answerService->storeTemporaryAnswer($request->validated());
+            return $this->successResponse();
         } catch (NotFoundException $error) {
             return $this->clientErrorsResponse(
                 message: $error->getMessage(),
                 code: Response::HTTP_NOT_FOUND,
             );
-        }catch (Exception) {
+        } catch (Exception) {
             return $this->serverErrorResponse();
         }
     }
