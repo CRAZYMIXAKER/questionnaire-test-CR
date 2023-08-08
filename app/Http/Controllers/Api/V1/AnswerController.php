@@ -6,11 +6,12 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Answer\GetAnswersBySurveyIdRequest;
 use App\Http\Requests\Answer\StoreAnswerRequest;
-use App\Models\Answer;
+use App\Http\Requests\Answer\StoreTemporaryAnswerRequest;
 use App\Services\AnswerService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use App\Exceptions\NotFoundException;
 
 class AnswerController extends ApiController
 {
@@ -39,43 +40,26 @@ class AnswerController extends ApiController
         }
     }
 
-    public function storeTemporaryAnswer()
-    {
-        $userData = AnswerService::getUserData();
-        $preparedAnswer = is_array(request('answer')) ?
-            json_encode(request('answer')) :
-            request('answer');
-
-        $answer = [
-            'survey_id' => request('survey_id'),
-            'question_id' => request('question_id'),
-            'user_id' => $userData['user_id'],
-            'session_id' => $userData['session_id'],
-            'answer' => $preparedAnswer,
-            'status' => 'not done',
-        ];
-
-        if ($answer['user_id'] || $answer['session_id']) {
-            Answer::updateOrCreate([
-                'survey_id' => $answer['survey_id'],
-                'question_id' => $answer['question_id'],
-                'user_id' => $answer['user_id'],
-                'session_id' => $answer['session_id'],
-            ], $answer);
-
-            /**
-             * Update the statuses of all questions if the user decides
-             * to change their answers in a completed questionnaire.
-             */
-            Answer::where([
-                ['user_id', '=', $answer['user_id']],
-                ['session_id', '=', $answer['session_id']],
-            ])->update(['status' => 'not done']);
-
-            return response()->json('Fine');
+    /**
+     * @param  \App\Http\Requests\Answer\StoreTemporaryAnswerRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storeTemporaryAnswer(StoreTemporaryAnswerRequest $request
+    ): JsonResponse {
+        try {
+            $answers = $this->answerService->storeTemporaryAnswer(
+                $request->validated()
+            );
+            return $this->successResponse(['answers' => $answers]);
+        } catch (NotFoundException $error) {
+            return $this->clientErrorsResponse(
+                message: $error->getMessage(),
+                code: Response::HTTP_NOT_FOUND,
+            );
+        }catch (Exception) {
+            return $this->serverErrorResponse();
         }
-
-        return response()->json(['error' => "Can't find any user data"]);
     }
 
     /**

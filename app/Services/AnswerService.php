@@ -2,10 +2,9 @@
 
 namespace App\Services;
 
+use App\Exceptions\NotFoundException;
 use App\Models\Answer;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Response;
 
 class AnswerService
 {
@@ -38,6 +37,51 @@ class AnswerService
             ['user_id', '=', $userData['user_id']],
             ['session_id', '=', $userData['session_id']],
         ])->update(['status' => 'done']);
+    }
+
+    /**
+     * @param  array  $answerData
+     *
+     * @return bool
+     * @throws \App\Exceptions\NotFoundException
+     */
+    public function storeTemporaryAnswer(array $answerData): bool
+    {
+        $userData = self::getUserData();
+        $preparedAnswer = is_array($answerData['answer']) ?
+            json_encode($answerData['answer']) :
+            $answerData['answer'];
+
+        $answer = [
+            'survey_id' => $answerData['survey_id'],
+            'question_id' => $answerData['question_id'],
+            'user_id' => $userData['user_id'],
+            'session_id' => $userData['session_id'],
+            'answer' => $preparedAnswer,
+            'status' => 'not done',
+        ];
+
+        if ($answer['user_id'] || $answer['session_id']) {
+            Answer::updateOrCreate([
+                'survey_id' => $answer['survey_id'],
+                'question_id' => $answer['question_id'],
+                'user_id' => $answer['user_id'],
+                'session_id' => $answer['session_id'],
+            ], $answer);
+
+            /**
+             * Update the statuses of all questions if the user decides
+             * to change their answers in a completed questionnaire.
+             */
+            Answer::where([
+                ['user_id', '=', $answer['user_id']],
+                ['session_id', '=', $answer['session_id']],
+            ])->update(['status' => 'not done']);
+
+            return true;
+        }
+
+        throw new NotFoundException('Not found any user data');
     }
 
     /**

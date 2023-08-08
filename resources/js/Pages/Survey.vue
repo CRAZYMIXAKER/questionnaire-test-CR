@@ -80,23 +80,23 @@ export default {
                 survey_id: this.survey.id,
                 question_id: currentQuestion.id,
                 answer: currentAnswer,
+            }).then(() => {
+                if (this.currentQuestionIndex === this.survey.questions.length - 1) {
+                    axios.post('/api/v1/answers', {
+                        survey_id: this.survey.id,
+                    }).then(() => {
+                        this.$router.push('/');
+                        this.$notify({
+                            text: 'Thank you for answering the questions!',
+                            type: 'success',
+                            speed: 1000,
+                            duration: 5000,
+                        });
+                    }).catch(error => console.log(error));
+                } else {
+                    this.currentQuestionIndex++;
+                }
             }).catch(error => console.log(error));
-
-            if (this.currentQuestionIndex === this.survey.questions.length - 1) {
-                axios.post('/api/v1/answers', {
-                    survey_id: this.survey.id,
-                }).then(() => {
-                    this.$router.push('/');
-                    this.$notify({
-                        text: 'Thank you for answering the questions!',
-                        type: 'success',
-                        speed: 1000,
-                        duration: 5000,
-                    });
-                }).catch(error => console.log(error));
-            } else {
-                this.currentQuestionIndex++;
-            }
         },
         checkAnswer(currentAnswer, currentQuestion) {
             let checkLastQuestionStep = this.currentQuestionIndex === this.survey.questions.length - 1;
