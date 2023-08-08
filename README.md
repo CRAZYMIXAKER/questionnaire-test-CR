@@ -18,29 +18,23 @@ npm run dev
 ./vendor/bin/sail down
 ```
 
-## Задание - Опрос
+## Zadanie
 
-### Задача - подготовить front- и back-end механизма опроса, состоящего из нескольких вопросов и списка заполненных опросов с ответами.
+### Zadanie polega na przygotowaniu frontu i backu mechanizmu ankiety składającej się z kilku pytań oraz listingu wypełnionych ankiet z udzielonymi odpowiedziami.
 
-### Просьба включить в опрос 3 типа вопросов;
-
-```
-1. вопрос с вводом в текстовую область (например, Какие источники вы используете для создания цветовой палитры?)
-2. вопрос с выбором (например, "Выберите свой любимый цвет: [красный, желтый, оранжевый, зеленый, синий, фиолетовый])
-3. вопрос с несколькими подвопросами, предполагающими оценку по шкале 1-5 нескольких компонентов.
-   Например, оцените каждый цвет из вопроса 2 по шкале от 1 до 5.
-```
-
-### Допущения:
+### Proszę w ankiecie umieścić 3 rodzaje pytań;
 
 ```
-Заполняющий анкету видит одновременно только один вопрос.
-Для перехода к следующему вопросу необходимо ответить на каждый из них.
-Можно вернуться к предыдущему вопросу и изменить ответ.
+1. Pytanie z inputem textarea (np. Z jakich źródeł korzystasz tworząc paletę kolorów?)
+2. Pytanie z inputem select (np. Wybierz swój ulubiony kolor: [czerwony, żółty, pomarańczowy, zielony, niebieski, fioletowy])
+3. Pytanie składające się z kilku podpytań polegające na ocenieniu w skali 1-5 kilku składowych.
+        np. oceń każdy kolor z pytania 2. w skali 1-5
 ```
 
-### Дополнительный вопрос:
+### Założenia:
 
 ```
-Предложите, пожалуйста, (достаточно словесного описания) механизм сбора хотя бы частичных результатов, даже если кто-то прервал опрос и не довел его до конца.
+W danej chwili wypełniający ankietę widzi tylko jedno pytanie.
+Odpowiedź na każde pytanie jest wymagana, żeby przejść do następnego.
+Można wrócić do poprzedniego pytania i zmienić odpowiedź.
 ```
