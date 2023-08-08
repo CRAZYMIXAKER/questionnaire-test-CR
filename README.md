@@ -6,6 +6,8 @@
 composer install
 ./vendor/bin/sail up -d --build
 docker exec -it questionnaire-app bash
+composer install
+php artisan migrate --seed
 npm i
 npm run dev
 ```
