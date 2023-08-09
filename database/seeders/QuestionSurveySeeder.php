@@ -9,7 +9,6 @@ use Illuminate\Database\Seeder;
 
 class QuestionSurveySeeder extends Seeder
 {
-
     /**
      * Run the database seeds.
      */
@@ -33,9 +32,8 @@ class QuestionSurveySeeder extends Seeder
                     'survey_id' => $survey->id,
                 ]);
 
-                $existingQuestionIds[] = $randomQuestionId; // Добавляем сгенерированный question_id в массив, чтобы следующие итерации не дублировали его
+                $existingQuestionIds[] = $randomQuestionId;
             }
         }
     }
-
 }
