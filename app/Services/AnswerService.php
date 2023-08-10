@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AnswerService
 {
-
     /**
      * @return array{user_id: int|null|string, session_id: array|null|string}
      */
@@ -127,5 +126,4 @@ class AnswerService
             return json_decode($answer->answer) ?? $answer->answer;
         });
     }
-
 }

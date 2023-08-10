@@ -17,7 +17,7 @@ class SurveyService
      */
     public function getAll(): Paginator
     {
-        $surveys = Survey::with('questions')->paginate(5);
+        $surveys = Survey::with('questions')->paginate(16);
 
         if ($surveys->isEmpty()) {
             throw new NotFoundException('Surveys not found.');

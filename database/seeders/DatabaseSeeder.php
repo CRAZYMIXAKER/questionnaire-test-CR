@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(5)->create();
         $this->call(QuestionSeeder::class);
-        Survey::factory(15)->create();
+        Survey::factory(55)->create();
         $this->call(QuestionSurveySeeder::class);
     }
 
