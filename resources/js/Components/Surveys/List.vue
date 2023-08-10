@@ -1,6 +1,6 @@
 <template>
     <div v-for="survey in surveys">
-        <SurveyItem :key="survey.id" :survey="survey"/>
+        <survey-item :key="survey.id" :survey="survey"/>
     </div>
 </template>
 

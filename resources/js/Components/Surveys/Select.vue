@@ -11,7 +11,8 @@
             <option
                 v-for="option in select"
                 :key="option.id"
-                :value="option.id">
+                :value="option.id"
+            >
                 {{ option.text }}
             </option>
         </select>

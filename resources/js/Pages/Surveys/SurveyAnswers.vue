@@ -8,19 +8,19 @@
             <div>
                 <h2>Questions:</h2>
                 <div v-for="(question, key) in survey.questions" :key="question.id">
-                    <SurveyAnswersTextarea
+                    <survey-answers-textarea
                         v-if="question.type === 'textarea'"
                         :answer="answers[key]"
                         :question="question.text"
                     />
 
-                    <SurveyAnswersSelect
+                    <survey-answers-select
                         v-if="question.type === 'select'"
                         :answer="answers[key]"
                         :question="question.text"
                     />
 
-                    <SurveyAnswersSubquestions
+                    <survey-answers-subquestions
                         v-if="question.type === 'subquestion'"
                         :answers="answers[key]"
                         :question=question.text

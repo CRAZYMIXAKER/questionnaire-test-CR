@@ -2,7 +2,8 @@
     <div>
         <div v-if="surveys">
             <h1>Questionnaires</h1>
-            <SurveyList :surveys="surveys"/>
+            <survey-list :surveys="surveys"/>
+            <pagination-main :pagination="pagination" @update-page="getSurveys($event)"/>
         </div>
         <div v-else>
             <p>Questionnaires not found.</p>
@@ -12,19 +13,23 @@
 
 <script>
 import SurveyList from '@/Components/Surveys/List.vue';
+import PaginationMain from '@/Components/Pagination/Main.vue';
 
 export default {
-    components: { SurveyList },
+    components: { PaginationMain, SurveyList },
     data() {
         return {
             surveys: [],
+            pagination: [],
         };
     },
     methods: {
-        getSurveys() {
-            axios.get(`/api/v1/surveys`)
+        getSurveys(page = 1) {
+            axios.get(`/api/v1/surveys?page=${page}`)
                 .then(res => {
-                    this.surveys = res.data.data.surveys;
+                    this.surveys = res.data.data.surveys.data;
+                    this.pagination = res.data.data.surveys;
+                    console.log(this.pagination);
                 })
                 .catch(error => {
                     console.log(error);

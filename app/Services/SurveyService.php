@@ -7,17 +7,17 @@ namespace App\Services;
 use App\Exceptions\NotFoundException;
 use App\Models\Question;
 use App\Models\Survey;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class SurveyService
 {
     /**
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Contracts\Pagination\Paginator
      * @throws \App\Exceptions\NotFoundException
      */
-    public function getAll(): Collection
+    public function getAll(): Paginator
     {
-        $surveys = Survey::all();
+        $surveys = Survey::with('questions')->paginate(5);
 
         if ($surveys->isEmpty()) {
             throw new NotFoundException('Surveys not found.');
