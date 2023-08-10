@@ -1,8 +1,14 @@
 <template>
-    <header>
-        <nav style="display: flex; column-gap: 10px;">
-            <router-link v-if="!isHomePage" :to="{ name: 'home' }">Home</router-link>
-            <router-link :to="{ name: 'surveys.index' }">Surveys</router-link>
+    <header class="header">
+        <nav class="header__nav">
+            <router-link
+                v-for="link in navigationLinks"
+                v-show="!isActiveLink(link)"
+                :key="link.name"
+                :to="{ name: link.name }"
+            >
+                {{ link.label }}
+            </router-link>
         </nav>
     </header>
 </template>
@@ -10,9 +16,41 @@
 <script>
 export default {
     computed: {
-        isHomePage() {
-            return this.$route.name === 'home';
+        navigationLinks() {
+            return [
+                { name: 'home', label: 'Home' },
+                { name: 'surveys.index', label: 'Surveys' },
+            ];
+        },
+    },
+    methods: {
+        isActiveLink(link) {
+            return this.$route.name === link.name;
         },
     },
 };
 </script>
+
+<style lang="scss">
+.header {
+    background: lavender;
+    padding: 0 30px;
+
+    &__nav {
+        column-gap: 10px;
+        display: flex;
+
+        a {
+            color: cornflowerblue;
+            font-size: 20px;
+            padding: 20px 10px;
+            text-decoration: unset;
+
+            &:hover {
+                color: snow;
+                background: lightpink;
+            }
+        }
+    }
+}
+</style>
