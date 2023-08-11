@@ -6,5 +6,5 @@
 </template>
 
 <style>
-@import "@sass/app.scss";
+@import "@sass/style.scss";
 </style>

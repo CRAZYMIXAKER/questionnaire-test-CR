@@ -1,0 +1,14 @@
+@import "@sass/abstracts/_abstracts.scss";
+@import "https://fonts.googleapis.com/css2?family=Catamaran:wght@400;500;600&display=swap";
+
+body,
+input,
+button,
+select,
+textarea,
+optgroup {
+    color: var(--main-text-color);
+    font-family: $font__main;
+    font-size: 1rem;
+    line-height: $font__line-height;
+}

@@ -10,7 +10,7 @@
 
     <title>Questionnaire-Test</title>
 </head>
-<body id="app">
+<body id="app" class="body">
 <script>window.Laravel = { csrfToken: '{{ csrf_token() }}', user: @json($user) };</script>
 @vite(['resources/js/app.js'])
 </body>

@@ -1,0 +1,13 @@
+@import "@sass/abstracts/_abstracts.scss";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    color: var(--main-text-color);
+    min-width: 320px;
+    padding: 20px;
+}

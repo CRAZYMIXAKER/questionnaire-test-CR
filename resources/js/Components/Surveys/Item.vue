@@ -12,9 +12,9 @@
             </h5>
             <div class="surveys__item-body">
                 <div v-if="survey.questions" class="surveys__item-questions questions">
-                    <p v-for="question in survey.questions" class="questions__item">
-                        {{ question.text }}
-                    </p>
+                    <div v-for="question in survey.questions" class="questions__item">
+                        <p class="questions__item-text">{{ question.text }}</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -40,50 +40,3 @@ export default {
     },
 };
 </script>
-
-<style lang="scss" scoped>
-.surveys__item {
-    background: #fff;
-    border-radius: 8px;
-    border: 1px gray solid;
-    max-height: 180px;
-    max-width: calc((100% - 56px) / 4);
-    overflow: hidden;
-    width: calc((100% - 56px) / 4);
-
-    &-wrapper {
-        padding: 10px 20px;
-    }
-
-    &-header {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 6px 12px;
-        text-wrap: nowrap;
-        justify-content: space-between;
-    }
-
-    .questions {
-        &__item {
-            display: none;
-
-            &--show {
-                display: block;
-            }
-        }
-    }
-
-    &-button a {
-        align-items: center;
-        background: lightgray;
-        display: flex;
-        justify-content: center;
-        padding: 10px 0;
-        width: 100%;
-
-        &:hover {
-            cursor: pointer;
-        }
-    }
-}
-</style>

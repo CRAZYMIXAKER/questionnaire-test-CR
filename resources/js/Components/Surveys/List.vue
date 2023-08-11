@@ -18,13 +18,3 @@ export default {
     },
 };
 </script>
-
-<style lang="scss" scoped>
-.surveys {
-    display: flex;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 16px;
-    padding: 20px;
-}
-</style>

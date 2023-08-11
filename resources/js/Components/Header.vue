@@ -30,27 +30,3 @@ export default {
     },
 };
 </script>
-
-<style lang="scss">
-.header {
-    background: lavender;
-    padding: 0 30px;
-
-    &__nav {
-        column-gap: 10px;
-        display: flex;
-
-        a {
-            color: cornflowerblue;
-            font-size: 20px;
-            padding: 20px 10px;
-            text-decoration: unset;
-
-            &:hover {
-                color: snow;
-                background: lightpink;
-            }
-        }
-    }
-}
-</style>
