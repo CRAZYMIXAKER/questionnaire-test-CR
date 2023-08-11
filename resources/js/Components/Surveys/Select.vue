@@ -1,10 +1,7 @@
 <template>
-    <div>
+    <div v-if="select" class="survey-questions__select">
         <select
-            id="country"
             :value="value"
-            class="form-select"
-            name="country"
             @change="$emit('update-select-answer', $event.target.value)"
         >
             <option :value="value ? '' : value" disabled>Choose Answer</option>

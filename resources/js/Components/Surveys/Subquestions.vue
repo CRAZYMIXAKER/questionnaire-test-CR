@@ -1,12 +1,17 @@
 <template>
-    <div>
-        <div v-for="(subquestion, key) in subquestions" :key="subquestion.id">
-            <label>{{ subquestion.text }}</label>
+    <div v-if="subquestions" class="survey-questions__subquestions">
+        <div
+            v-for="(subquestion, key) in subquestions"
+            :key="subquestion.id"
+            class="survey-questions__subquestions-item subquestion"
+        >
+            <label class="subquestion__title">{{ subquestion.text }}</label>
             <input
                 :max="5"
                 :min="1"
                 :step="1"
                 :value="values[key]"
+                class="subquestion__input"
                 type="number"
                 @input="updateSubquestionAnswer(key, $event.target.value)"
             >

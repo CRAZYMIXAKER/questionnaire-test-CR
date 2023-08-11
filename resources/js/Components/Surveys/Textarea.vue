@@ -1,6 +1,6 @@
 <template>
-    <div class="textarea">
-        <div class="textarea__body">
+    <div class="survey-questions__textarea">
+        <div class="survey-questions__textarea-body">
             <textarea
                 :value="value"
                 class="textarea"

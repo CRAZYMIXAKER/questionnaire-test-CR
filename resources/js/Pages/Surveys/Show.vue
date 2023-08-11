@@ -1,10 +1,10 @@
 <template>
-    <div>
-        <div v-if="survey.questions">
-            <h1>{{ survey.title }}</h1>
+    <div class="survey-questions">
+        <div v-if="survey.questions" class="survey-questions__wrapper">
+            <h1 class="survey-questions__title">{{ survey.title }}</h1>
+            <label class="survey-questions__question">{{ currentQuestion }}</label>
 
-            <label>{{ currentQuestion }}</label>
-            <div v-for="(question, key) in survey.questions">
+            <template v-for="(question, key) in survey.questions">
                 <survey-textarea
                     v-if="question.type === 'textarea'"
                     v-show="currentQuestionIndex === key"
@@ -28,13 +28,25 @@
                     :values="answeredQuestions[key] ?? ''"
                     @update-subquestion-answer="updateSubquestionAnswer(key, $event.key, $event.value)"
                 />
-            </div>
-            <div>
-                <button @click="submitAnswer">
+            </template>
+            <div class="survey-questions__buttons">
+                <button class="survey-questions__buttons-item" @click="submitAnswer">
                     {{ currentQuestionIndex === survey.questions.length - 1 ? 'Finish' : 'Submit' }}
                 </button>
-                <button v-show="showPreviousQuestion" @click="this.currentQuestionIndex--">Предыдущий вопрос</button>
-                <button v-show="showNextQuestion" @click="this.currentQuestionIndex++">Следующий вопрос</button>
+                <button
+                    v-if="showPreviousQuestion"
+                    class="survey-questions__buttons-item"
+                    @click="this.currentQuestionIndex--"
+                >
+                    <span>Previous Question</span>
+                </button>
+                <button
+                    v-if="showNextQuestion"
+                    class="survey-questions__buttons-item"
+                    @click="this.currentQuestionIndex++"
+                >
+                    <span>Next question</span>
+                </button>
             </div>
         </div>
     </div>
