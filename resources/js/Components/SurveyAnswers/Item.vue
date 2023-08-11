@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <p>{{ question }}: {{ answer }}</p>
-    </div>
+    <p v-if="question && answer">{{ question }}: <span>{{ answer }}</span></p>
 </template>
 
 <script>

@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Exceptions\NotFoundException;
 use App\Models\Answer;
+use App\Models\Question;
 use Illuminate\Support\Facades\Auth;
 
 class AnswerService
@@ -120,7 +121,7 @@ class AnswerService
 
         return $answers->map(function ($answer) {
             if ($answer->question->type === 'select') {
-                return $answer->question->text;
+                return Question::find($answer->answer)->text;
             }
 
             return json_decode($answer->answer) ?? $answer->answer;

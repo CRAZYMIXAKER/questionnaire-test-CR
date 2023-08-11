@@ -1,12 +1,16 @@
 <template>
-    <div>
-        <h3>Subquestions: <span>{{ question }}</span></h3>
-        <div v-for="(subquestion, subKey) in subquestions" :key="subquestion.id">
-            <SurveyAnswersItem
-                :answer="answers?.[subKey]"
-                :question="subquestion.text"
-            />
-        </div>
+    <div v-if="subquestions && answers && question" class="survey-answers__subquestions">
+        <h3 class="survey-answers__subquestions-question">
+            Subquestions: <span>{{ question }}</span>
+        </h3>
+
+        <SurveyAnswersItem
+            v-for="(subquestion, subKey) in subquestions"
+            :key="subquestion.id"
+            :answer="answers?.[subKey]"
+            :question="subquestion.text"
+            class="survey-answers__subquestions-item"
+        />
     </div>
 </template>
 

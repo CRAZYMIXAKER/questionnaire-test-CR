@@ -1,7 +1,7 @@
 <template>
-    <div class="survey-question-select">
-        <h3>Select: <span>{{ question }}</span></h3>
-        <p>Answer: {{ answer }}</p>
+    <div v-if="question && answer" class="survey-answers__select">
+        <h3 class="survey-answers__select-question">Select: {{ question }}</h3>
+        <p class="survey-answers__select-answer">Answer: {{ answer }}</p>
     </div>
 </template>
 

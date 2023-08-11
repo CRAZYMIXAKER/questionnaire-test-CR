@@ -1,0 +1,88 @@
+.survey-answers {
+    &__title {
+        color: cornflowerblue;
+        margin: 20px 0;
+
+        &-text {
+
+        }
+
+        &-date {
+            color: cadetblue;
+        }
+    }
+
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        row-gap: 8px;
+    }
+
+    &__textarea {
+
+        &-text {
+            color: cornflowerblue;
+
+            span {
+                color: mediumpurple;
+            }
+        }
+    }
+
+    &__select {
+        background: ghostwhite;
+        border-radius: 8px;
+        border: 1px cadetblue solid;
+        padding: 8px;
+        width: max-content;
+
+        &-question {
+            color: cornflowerblue;
+        }
+
+        &-answer {
+            color: mediumpurple;
+        }
+    }
+
+    &__subquestions {
+        display: flex;
+        flex-direction: column;
+        max-width: 260px;
+        padding: 10px;
+        row-gap: 8px;
+
+        &-question {
+            color: mediumpurple;
+
+            span {
+                color: cornflowerblue;
+            }
+        }
+
+        &-item {
+            color: ghostwhite;
+            column-gap: 5px;
+            display: flex;
+            font-weight: bold;
+            justify-content: space-between;
+            padding: 0 10px;
+
+            span {
+                color: cadetblue;
+            }
+        }
+    }
+
+    &__link {
+        color: cadetblue;
+        display: block;
+        font-size: 18px;
+        margin: 10px 0;
+        text-decoration: unset;
+
+        &:hover {
+            color: cornflowerblue;
+        }
+    }
+}
