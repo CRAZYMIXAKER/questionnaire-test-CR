@@ -24,14 +24,25 @@ export default {
   },
   actions: {
     createUser({ commit }, form) {
-      axios.post('/api/v1/register', form)
-        .then(() => router.push({ name: 'home' }))
-        .catch((e) => commit('updateErrors', e.response.data.errors));
+      axios.get('/sanctum/csrf-cookie').then(() => {
+        axios.post('/api/v1/register', form)
+          .then(() => router.push({ name: 'home' }))
+          .catch((e) => commit('updateErrors', e.response.data.errors));
+      });
+    },
+    loginUser({ commit }, form) {
+      axios.get('/sanctum/csrf-cookie').then(() => {
+        axios.post('/api/v1/login', form)
+          .then(() => router.push({ name: 'home' }))
+          .catch((e) => commit('updateErrors', e.response.data.errors));
+      });
     },
     logout() {
-      axios.post('/api/v1/logout')
-        .then(() => window.location.href = '/register')
-        .catch((e) => console.log(e));
+      axios.get('/sanctum/csrf-cookie').then(() => {
+        axios.post('/api/v1/logout')
+          .then(() => router.push({ name: 'login' }))
+          .catch((e) => console.log(e));
+      });
     },
   },
 };

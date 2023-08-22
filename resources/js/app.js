@@ -7,8 +7,6 @@ import router from '@/router/index';
 import Notifications from '@kyvg/vue3-notification';
 import store from '@/store';
 
-axios.defaults.headers.common['X-CSRF-TOKEN'] = window.Laravel.csrfToken;
-
 const app = createApp(App);
 app.use(VueAxios, axios);
 app.use(Notifications);

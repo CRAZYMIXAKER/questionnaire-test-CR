@@ -11,7 +11,7 @@
     <title>Questionnaire-Test</title>
 </head>
 <body id="app" class="body">
-<script>window.Laravel = { csrfToken: '{{ csrf_token() }}', user: @json($user) };</script>
+<script>window.Laravel = { user: @json($user) };</script>
 @vite(['resources/js/app.js'])
 </body>
 </html>
