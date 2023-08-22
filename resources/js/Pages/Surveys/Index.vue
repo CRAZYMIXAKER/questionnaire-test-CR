@@ -29,7 +29,6 @@ export default {
                 .then(res => {
                     this.surveys = res.data.data.surveys.data;
                     this.pagination = res.data.data.surveys;
-                    console.log(this.pagination);
                 })
                 .catch(error => {
                     console.log(error);
