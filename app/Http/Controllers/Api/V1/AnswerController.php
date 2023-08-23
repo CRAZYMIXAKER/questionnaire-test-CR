@@ -25,11 +25,9 @@ class AnswerController extends ApiController
      */
     public function store(StoreAnswerRequest $request): JsonResponse
     {
-        $validatedParams = $request->validated();
-
         try {
             $this->answerService->storeAnswer(
-                (int)$validatedParams['survey_id']
+                (int)$request->validated('survey_id')
             );
             return $this->successResponse(
                 code: Response::HTTP_CREATED,
@@ -66,13 +64,11 @@ class AnswerController extends ApiController
      */
     public function getAnswersBySurveyId(GetAnswersBySurveyIdRequest $request
     ): JsonResponse {
-        $validatedParams = $request->validated();
-
         try {
             $answers = $this->answerService->getAnswersBySurveyId(
-                (int)$validatedParams['survey_id']
+                (int)$request->validated('survey_id')
             );
-            return $this->successResponse(['answers' => $answers]);
+            return $this->successResponse($answers->toArray());
         } catch (Exception) {
             return $this->serverErrorResponse();
         }
@@ -86,13 +82,11 @@ class AnswerController extends ApiController
     public function getModifiedAnswersBySurveyId(
         GetAnswersBySurveyIdRequest $request
     ): JsonResponse {
-        $validatedParams = $request->validated();
-
         try {
             $answers = $this->answerService->getModifiedAnswersBySurveyId(
-                (int)$validatedParams['survey_id']
+                (int)$request->validated('survey_id')
             );
-            return $this->successResponse(['answers' => $answers]);
+            return $this->successResponse($answers->toArray());
         } catch (Exception) {
             return $this->serverErrorResponse();
         }

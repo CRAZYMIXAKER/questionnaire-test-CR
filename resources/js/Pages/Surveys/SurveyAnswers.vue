@@ -66,7 +66,7 @@ export default {
         getQuestions() {
             axios.get(`/api/v1/surveys/${this.$route.params.survey_id}`)
                 .then(res => {
-                    this.survey = res.data.data.survey;
+                    this.survey = res.data.data;
                 })
                 .catch(error => {
                     console.log(error);
@@ -75,7 +75,7 @@ export default {
         getAnswers() {
             axios.get(`/api/v1/surveys/${this.$route.params.survey_id}/answers`)
                 .then(response => {
-                    this.answers = response.data.data.answers;
+                    this.answers = response.data.data;
                 })
                 .catch(error => console.log(error));
         },

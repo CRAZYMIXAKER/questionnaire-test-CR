@@ -72,8 +72,8 @@ export default {
     methods: {
         getQuestions() {
             axios.get(`/api/v1/surveys/${this.$route.params.survey_id}`)
-                .then(res => {
-                    this.survey = res.data.data.survey;
+                .then(response => {
+                    this.survey = response.data.data;
                     this.currentQuestion = this.survey.questions[0].text;
                 })
                 .catch(error => {
@@ -93,23 +93,25 @@ export default {
                 survey_id: this.survey.id,
                 question_id: currentQuestion.id,
                 answer: currentAnswer,
-            }).then(() => {
-                if (this.currentQuestionIndex === this.survey.questions.length - 1) {
-                    axios.post('/api/v1/answers', {
-                        survey_id: this.survey.id,
-                    }).then(() => {
-                        this.$router.push(`/surveys/${this.$route.params.survey_id}/answers`);
-                        this.$notify({
-                            text: 'Thank you for answering the questions!',
-                            type: 'success',
-                            speed: 1000,
-                            duration: 5000,
-                        });
-                    }).catch(error => console.log(error));
-                } else {
-                    this.currentQuestionIndex++;
-                }
-            }).catch(error => console.log(error));
+            })
+                .then(() => {
+                    if (this.currentQuestionIndex === this.survey.questions.length - 1) {
+                        axios.post('/api/v1/answers', { survey_id: this.survey.id })
+                            .then(() => {
+                                this.$router.push(`/surveys/${this.$route.params.survey_id}/answers`);
+                                this.$notify({
+                                    text: 'Thank you for answering the questions!',
+                                    type: 'success',
+                                    speed: 1000,
+                                    duration: 5000,
+                                });
+                            })
+                            .catch(error => console.log(error));
+                    } else {
+                        this.currentQuestionIndex++;
+                    }
+                })
+                .catch(error => console.log(error));
         },
         checkAnswer(currentAnswer, currentQuestion) {
             let checkLastQuestionStep = this.currentQuestionIndex === this.survey.questions.length - 1;
@@ -170,7 +172,7 @@ export default {
         getAnswers() {
             axios.get(`/api/v1/answers/${this.$route.params.survey_id}`)
                 .then(response => {
-                    this.answeredQuestions = response.data.data.answers;
+                    this.answeredQuestions = response.data.data;
                 })
                 .catch(error => console.log(error));
         },

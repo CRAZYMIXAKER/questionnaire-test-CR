@@ -16,4 +16,9 @@ class Question extends Model
         'type',
         'parent_id',
     ];
+
+    public function nestings()
+    {
+        return $this->hasMany(__CLASS__, 'parent_id', 'id');
+    }
 }

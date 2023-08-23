@@ -5,56 +5,15 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Exceptions\NotFoundException;
+use App\Http\Resources\SurveyCollection;
+use App\Http\Resources\SurveyResource;
 use App\Models\Question;
 use App\Models\Survey;
-use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class SurveyService
 {
-    /**
-     * @return \Illuminate\Contracts\Pagination\Paginator
-     * @throws \App\Exceptions\NotFoundException
-     */
-    public function getAll(): Paginator
-    {
-        $surveys = Survey::with('questions')->paginate(16);
-
-        if ($surveys->isEmpty()) {
-            throw new NotFoundException('Surveys not found.');
-        }
-
-        return $surveys;
-    }
-
-    /**
-     * @param  int  $surveyId
-     *
-     * @return \App\Models\Survey
-     * @throws \App\Exceptions\NotFoundException
-     */
-    public function getSurvey(int $surveyId): Survey
-    {
-        $survey = $this->findSurvey($surveyId);
-        $questions = $survey->questions;
-
-        if ($questions->isEmpty()) {
-            throw new NotFoundException('Questions not found for this survey.');
-        }
-
-        $questionIds = $questions->pluck('id')->toArray();
-        $nestedQuestions = Question::whereIn('parent_id', $questionIds)->get();
-
-        $questions->transform(function ($question) use ($nestedQuestions) {
-            $question->nestings = $nestedQuestions->where(
-                'parent_id',
-                $question->id
-            );
-            return $question;
-        });
-
-        return $survey;
-    }
-
     /**
      * @throws \App\Exceptions\NotFoundException
      */
@@ -68,5 +27,37 @@ class SurveyService
         }
 
         return $survey;
+    }
+    
+    /**
+     * @throws \App\Exceptions\NotFoundException
+     */
+    public function getAll(): AnonymousResourceCollection
+    {
+        $surveys = Survey::with('questions')->paginate(16);
+
+        if ($surveys->isEmpty()) {
+            throw new NotFoundException('Surveys not found.');
+        }
+
+        return SurveyResource::collection($surveys);
+    }
+
+    /**
+     * @param  int  $surveyId
+     *
+     * @return \Illuminate\Http\Resources\Json\JsonResource
+     * @throws \App\Exceptions\NotFoundException
+     */
+    public function getSurvey(int $surveyId): JsonResource
+    {
+        $survey = $this->findSurvey($surveyId);
+        $questions = $survey->questions->load('nestings');
+
+        if ($questions->isEmpty()) {
+            throw new NotFoundException('Questions not found for this survey.');
+        }
+
+        return new SurveyResource($survey);
     }
 }
