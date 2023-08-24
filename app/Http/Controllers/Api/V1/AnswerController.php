@@ -29,6 +29,7 @@ class AnswerController extends ApiController
             $this->answerService->storeAnswer(
                 (int)$request->validated('survey_id')
             );
+
             return $this->successResponse(
                 code: Response::HTTP_CREATED,
             );
@@ -46,6 +47,7 @@ class AnswerController extends ApiController
     ): JsonResponse {
         try {
             $this->answerService->storeTemporaryAnswer($request->validated());
+
             return $this->successResponse();
         } catch (NotFoundException $error) {
             return $this->clientErrorsResponse(
@@ -68,6 +70,7 @@ class AnswerController extends ApiController
             $answers = $this->answerService->getAnswersBySurveyId(
                 (int)$request->validated('survey_id')
             );
+
             return $this->successResponse($answers->toArray());
         } catch (Exception) {
             return $this->serverErrorResponse();
@@ -86,6 +89,7 @@ class AnswerController extends ApiController
             $answers = $this->answerService->getModifiedAnswersBySurveyId(
                 (int)$request->validated('survey_id')
             );
+
             return $this->successResponse($answers->toArray());
         } catch (Exception) {
             return $this->serverErrorResponse();

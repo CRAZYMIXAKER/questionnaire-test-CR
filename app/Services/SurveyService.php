@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Exceptions\NotFoundException;
-use App\Http\Resources\SurveyCollection;
 use App\Http\Resources\SurveyResource;
-use App\Models\Question;
 use App\Models\Survey;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SurveyService
@@ -20,6 +17,7 @@ class SurveyService
     private function findSurvey(int $surveyId): Survey
     {
         $survey = Survey::find($surveyId);
+
         if (!$survey) {
             throw new NotFoundException(
                 sprintf('Not found survey with id %d.', $surveyId),
@@ -28,11 +26,11 @@ class SurveyService
 
         return $survey;
     }
-    
+
     /**
      * @throws \App\Exceptions\NotFoundException
      */
-    public function getAll(): AnonymousResourceCollection
+    public function getAll()
     {
         $surveys = Survey::with('questions')->paginate(16);
 
@@ -40,7 +38,7 @@ class SurveyService
             throw new NotFoundException('Surveys not found.');
         }
 
-        return SurveyResource::collection($surveys);
+        return $surveys;
     }
 
     /**

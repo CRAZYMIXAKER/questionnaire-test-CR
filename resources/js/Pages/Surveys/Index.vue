@@ -27,8 +27,8 @@ export default {
         getSurveys(page = 1) {
             axios.get(`/api/v1/surveys?page=${page}`)
                 .then(res => {
-                    this.surveys = res.data.data;
-                    // this.pagination = res.data.data.pagination;
+                    this.surveys = res.data.data.data;
+                    this.pagination = res.data.data;
                 })
                 .catch(error => {
                     console.log(error);
