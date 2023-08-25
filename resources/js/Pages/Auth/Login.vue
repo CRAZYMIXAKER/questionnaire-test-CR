@@ -44,7 +44,7 @@
     <div class="flex items-center justify-end mt-4">
       <!--                            @if (Route::has('password.request'))-->
       <router-link
-          :to="{name: 'password.request'}"
+          :to="{name: 'forgot.password'}"
           class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
         Forgot your password?
       </router-link>

@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Auth;
 use App\Events\UserUpdated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Mail\User\PasswordMail;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class RegisteredUserController extends Controller
 {
@@ -36,6 +38,8 @@ class RegisteredUserController extends Controller
                 'email' => $user->email,
             ])
         );
+
+//        Mail::to($user->email)->send(new PasswordMail('asdasdasdasd'));
 
         return response()->noContent();
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\UserUpdated;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Verified;
@@ -13,20 +14,21 @@ class VerifyEmailController extends Controller
     /**
      * Mark the authenticated user's email address as verified.
      */
-    public function __invoke(EmailVerificationRequest $request): RedirectResponse
-    {
+    public function __invoke(EmailVerificationRequest $request
+    ): RedirectResponse {
         if ($request->user()->hasVerifiedEmail()) {
             return redirect()->intended(
-                config('app.frontend_url').RouteServiceProvider::HOME.'?verified=1'
+                config('app.frontend_url').RouteServiceProvider::HOME
             );
         }
 
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
+            broadcast(new UserUpdated($request->user()));
         }
 
         return redirect()->intended(
-            config('app.frontend_url').RouteServiceProvider::HOME.'?verified=1'
+            config('app.frontend_url').RouteServiceProvider::HOME
         );
     }
 }
