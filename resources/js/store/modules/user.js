@@ -1,5 +1,6 @@
 import axios from 'axios';
 import router from '@/router/index.js';
+import { notify } from '@kyvg/vue3-notification';
 
 export default {
     state: {
@@ -34,6 +35,16 @@ export default {
             axios.get('/sanctum/csrf-cookie')
                 .then(() => {
                     axios.post('/api/v1/register', form)
+                        .then(() => {
+                            router.push({ name: 'home' });
+                            notify({
+                                text: 'Thanks for signing up! Before getting started, could you verify your email address by clicking' +
+                                    ' on the link we just emailed to you?',
+                                type: 'info',
+                                speed: 1000,
+                                duration: 20000,
+                            });
+                        })
                         .catch((e) => commit('updateErrors', e.response.data.errors));
                 });
         },
