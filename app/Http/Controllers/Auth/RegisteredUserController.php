@@ -7,14 +7,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Mail\User\PasswordMail;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 
 class RegisteredUserController extends Controller
 {
+    public function __construct(private readonly UserService $userService) {}
 
     /**
      * Handle an incoming registration request.
@@ -26,20 +27,13 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-        ]);
+        ])->assignRole('user');
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        broadcast(
-            new UserUpdated([
-                'name' => $user->name,
-                'email' => $user->email,
-            ])
-        );
-
-//        Mail::to($user->email)->send(new PasswordMail('asdasdasdasd'));
+        $this->userService::sendUserBroadcast($user);
 
         return response()->noContent();
     }

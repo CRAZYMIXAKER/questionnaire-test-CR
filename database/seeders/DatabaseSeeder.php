@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(5)->create();
+        $this->call(RoleSeeder::class);
         $this->call(QuestionSeeder::class);
         Survey::factory(55)->create();
         $this->call(QuestionSurveySeeder::class);

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
+
     public function __construct(private readonly UserService $userService) {}
 
     /**
@@ -23,8 +24,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $this->userService->getUserByEmailAndBroadcast(
-          $request->validated('email')
+        $this->userService::sendUserBroadcast(
+            $this->userService::getUserByEmail($request->validated('email'))
         );
 
         return response()->noContent();
@@ -41,8 +42,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        broadcast(new UserUpdated(null));
+        $this->userService::sendUserBroadcast(null);
 
         return response()->noContent();
     }
+
 }

@@ -18,12 +18,12 @@ class UserUpdated implements ShouldBroadcast
     use InteractsWithSockets;
     use SerializesModels;
 
-    public $user;
+    public ?User $user;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($user)
+    public function __construct(?User $user)
     {
         $this->user = $user;
     }
@@ -31,7 +31,7 @@ class UserUpdated implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      */
-    public function broadcastOn()
+    public function broadcastOn(): Channel
     {
         return new Channel('user-updates');
     }

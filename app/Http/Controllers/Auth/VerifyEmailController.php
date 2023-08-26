@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Auth;
 use App\Events\UserUpdated;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use App\Services\UserService;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
 
 class VerifyEmailController extends Controller
 {
+    public function __construct(private readonly UserService $userService) {}
+
     /**
      * Mark the authenticated user's email address as verified.
      */
@@ -24,7 +27,7 @@ class VerifyEmailController extends Controller
 
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
-            broadcast(new UserUpdated($request->user()));
+            $this->userService::sendUserBroadcast($request->user());
         }
 
         return redirect()->intended(
