@@ -34,7 +34,9 @@ class UserService
             unset($user->password);
         }
 
-        $user?->getRoleNames();
+        if (!is_null($user)) {
+            $user->roleses_name = $user->getRoleNames()->all();
+        }
 
         return $user;
     }

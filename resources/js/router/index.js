@@ -11,25 +11,36 @@ import Home from '@/Pages/Home';
 import SurveysShow from '@/Pages/Surveys/Show';
 import SurveyAnswers from '@/Pages/Surveys/SurveyAnswers';
 import SurveysIndex from '@/Pages/Surveys/Index';
+import AdminIndex from '@/Pages/AdminDashboard/Index';
+import AccessDenied from '@/Pages/Errors/AccessDenied';
+import NotFound from '@/Pages/Errors/NotFound';
 
-const isAuth = (to, from, next) => {
+const checkAuth = (authRequired) => (to, from, next) => {
     const store = useStore();
 
-    if (store.getters.user) {
+    if (
+        (authRequired && store.getters.user) ||
+        (!authRequired && !store.getters.user)
+    ) {
         next();
+    } else {
+        next(authRequired ? '/login' : '/');
     }
-
-    next('/login');
 };
 
 const checkRole = (allowedRoles = ['user', 'admin', 'super-admin']) => (to, from, next) => {
     const store = useStore();
+    const user = store.getters.user;
 
-    if (store.getters.user === null) {
-        next('login');
+    if (user === null) {
+        next('/login');
     }
 
-    if (allowedRoles.includes('user')) {
+    if (
+        (allowedRoles.includes('user') && user.roleses_name.includes('user')) ||
+        (allowedRoles.includes('admin') && user.roleses_name.includes('admin')) ||
+        (allowedRoles.includes('super-admin') && user.roleses_name.includes('super-admin'))
+    ) {
         next();
     } else {
         next('/access-denied');
@@ -48,7 +59,7 @@ const routes = [
                     default: Login,
                     menu: SidebarDefault,
                 },
-                beforeEnter: !isAuth,
+                beforeEnter: checkAuth(false),
             },
             {
                 path: 'register',
@@ -57,7 +68,7 @@ const routes = [
                     default: Register,
                     menu: SidebarDefault,
                 },
-                beforeEnter: !isAuth,
+                beforeEnter: checkAuth(false),
             },
             {
                 path: 'email/verify',
@@ -66,7 +77,7 @@ const routes = [
                     default: EmailVerify,
                     menu: SidebarDefault,
                 },
-                beforeEnter: isAuth,
+                beforeEnter: checkAuth(true),
             },
             {
                 path: 'forgot-password',
@@ -75,7 +86,7 @@ const routes = [
                     default: ForgotPassword,
                     menu: SidebarDefault,
                 },
-                beforeEnter: !isAuth,
+                beforeEnter: checkAuth(false),
             },
             {
                 path: 'password-reset/:token',
@@ -84,6 +95,7 @@ const routes = [
                     default: PasswordReset,
                     menu: SidebarDefault,
                 },
+                beforeEnter: checkAuth(false),
             },
             {
                 path: '',
@@ -114,6 +126,31 @@ const routes = [
                 name: 'survey.answers',
                 components: {
                     default: SurveyAnswers,
+                    menu: SidebarDefault,
+                },
+            },
+            {
+                path: 'admin/index',
+                name: 'admin.index',
+                components: {
+                    default: AdminIndex,
+                    menu: SidebarDefault,
+                },
+                beforeEnter: checkRole(['admin', 'super-admin']),
+            },
+            {
+                path: 'access-denied',
+                name: 'access.denied',
+                components: {
+                    default: AccessDenied,
+                    menu: SidebarDefault,
+                },
+            },
+            {
+                name: 'not-found',
+                path: ':catchAll(.*)',
+                components: {
+                    default: NotFound,
                     menu: SidebarDefault,
                 },
             },
