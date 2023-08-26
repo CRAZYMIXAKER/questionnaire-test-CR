@@ -10,12 +10,24 @@
     background: #fff;
     border-radius: 8px;
     border: 1px gray solid;
-    max-width: calc((100% - 56px) / 4);
+    column-gap: 3px;
+    display: flex;
+    flex: calc((100% - 56px) / 4);
     overflow: hidden;
-    width: calc((100% - 56px) / 4);
+
+    &-body {
+        display: flex;
+        flex-direction: column;
+        flex: auto;
+        justify-content: space-between;
+        overflow: hidden;
+    }
 
     &-wrapper {
+        display: flex;
+        flex-direction: column;
         padding: 10px 20px;
+        row-gap: 12px;
     }
 
     &-header {
@@ -24,6 +36,11 @@
         gap: 6px 12px;
         justify-content: space-between;
         text-wrap: nowrap;
+    }
+
+    &-link {
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .questions {
@@ -44,16 +61,41 @@
         }
     }
 
-    &-button a {
-        align-items: center;
-        background: lightgray;
-        display: flex;
-        justify-content: center;
-        padding: 10px 0;
-        width: 100%;
+    &-button {
+        &--hide {
+            display: none;
+        }
 
-        &:hover {
-            cursor: pointer;
+        a {
+            align-items: center;
+            background: lightgray;
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+            width: 100%;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+
+    &-buttons {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 3px 0;
+        row-gap: 4px;
+        width: min-content;
+
+        button,
+        a {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: -webkit-fill-available;
         }
     }
 }

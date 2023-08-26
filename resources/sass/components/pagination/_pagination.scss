@@ -12,6 +12,8 @@
 }
 
 .pagination {
+    justify-content: center;
+
     &__list {
         align-items: center;
         animation-timeout: 200ms;
