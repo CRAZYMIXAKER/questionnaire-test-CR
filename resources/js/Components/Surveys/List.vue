@@ -1,6 +1,6 @@
 <template>
     <div v-if="surveys" class="surveys">
-        <survey-item v-for="survey in surveys" :key="survey.id" :survey="survey"/>
+        <survey-item @delete-survey="deleteSurvey($event)" v-for="survey in surveys" :key="survey.id" :survey="survey"/>
     </div>
 </template>
 
@@ -16,5 +16,8 @@ export default {
             require: true,
         },
     },
+    methods:{
+        deleteSurvey(surveyId) {this.$emit('delete-survey', surveyId);},
+    }
 };
 </script>

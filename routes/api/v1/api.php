@@ -39,4 +39,8 @@ Route::middleware('survey.session')->group(function () {
         '/surveys/{survey_id}/answers',
         [AnswerController::class, 'getModifiedAnswersBySurveyId']
     );
+    Route::delete(
+        '/surveys/{survey_id}',
+        [SurveyController::class, 'destroy']
+    );
 });

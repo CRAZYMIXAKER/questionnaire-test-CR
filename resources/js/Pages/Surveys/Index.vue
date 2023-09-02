@@ -2,7 +2,7 @@
     <div>
         <div v-if="surveys">
             <h1>Questionnaires</h1>
-            <survey-list :surveys="surveys"/>
+            <survey-list :surveys="surveys" @delete-survey="deleteSurvey($event)"/>
             <pagination-main :pagination="pagination" @update-page="getSurveys($event)"/>
         </div>
         <div v-else>
@@ -33,6 +33,11 @@ export default {
                 .catch(error => {
                     console.log(error);
                 });
+        },
+        deleteSurvey(surveyId) {
+            axios.delete(`/api/v1/surveys/${surveyId}`)
+                .then(() => this.getSurveys())
+                .catch(e => console.log(e));
         },
     },
     mounted() {

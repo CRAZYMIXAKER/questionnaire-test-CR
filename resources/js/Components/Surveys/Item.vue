@@ -25,7 +25,8 @@
                 <span>Open</span>
                 <i class="bi bi-link-45deg"></i>
             </router-link>
-            <button v-if="isUserAdmin" class="btn btn-danger" type="button">
+<!--            <button v-if="isUserAdmin" class="btn btn-danger" type="button" @click="deleteSurvey(survey.id)">-->
+            <button v-if="isUserAdmin" class="btn btn-danger" type="button" @click="$emit('delete-survey', survey.id)">
                 <span>Delete</span>
                 <i class="bi bi-trash"></i>
             </button>
@@ -54,7 +55,7 @@ export default {
         const store = useStore();
 
         const user = computed(() => store.getters.user);
-        const isUserAdmin = user.value.roleses_name.includes('admin', 'super-admin');
+        const isUserAdmin = user.value?.roleses_name.some(role => ['admin', 'super-admin'].includes(role));
 
         onMounted(() =>
             showMoreLess(
