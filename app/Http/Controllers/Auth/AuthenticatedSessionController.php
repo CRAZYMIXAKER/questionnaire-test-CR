@@ -24,9 +24,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $this->userService::sendUserBroadcast(
-            $this->userService::getUserByEmail($request->validated('email'))
-        );
+//        $this->userService::sendUserBroadcast(
+//            $this->userService::getUserByEmail($request->validated('email'))
+//        );
 
         return response()->noContent();
     }
@@ -42,7 +42,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        $this->userService::sendUserBroadcast(null);
+//        $this->userService::sendUserBroadcast(null);
 
         return response()->noContent();
     }

@@ -27,7 +27,7 @@ class VerifyEmailController extends Controller
 
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
-            $this->userService::sendUserBroadcast($request->user());
+//            $this->userService::sendUserBroadcast($request->user());
         }
 
         return redirect()->intended(

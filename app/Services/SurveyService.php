@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Exceptions\NotFoundException;
 use App\Http\Resources\SurveyResource;
 use App\Models\Survey;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorAlias;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SurveyService
@@ -28,9 +29,10 @@ class SurveyService
     }
 
     /**
+     * @return LengthAwarePaginatorAlias
      * @throws \App\Exceptions\NotFoundException
      */
-    public function getAll()
+    public function getAll(): LengthAwarePaginatorAlias
     {
         $surveys = Survey::with('questions')->paginate(16);
 
@@ -57,5 +59,17 @@ class SurveyService
         }
 
         return new SurveyResource($survey);
+    }
+
+    /**
+     * @param  int  $surveyId
+     *
+     * @return void
+     */
+    public function deleteSurvey(int $surveyId): void
+    {
+        $survey = Survey::find($surveyId);
+        $survey->questions()->detach();
+        $survey->delete();
     }
 }

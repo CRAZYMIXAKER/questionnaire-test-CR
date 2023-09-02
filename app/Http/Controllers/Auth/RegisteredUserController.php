@@ -33,7 +33,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        $this->userService::sendUserBroadcast($user);
+//        $this->userService::sendUserBroadcast($user);
 
         return response()->noContent();
     }
