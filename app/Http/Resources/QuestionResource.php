@@ -7,7 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class QuestionResource extends JsonResource
 {
-
     /**
      * Transform the resource into an array.
      *
@@ -16,14 +15,13 @@ class QuestionResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'text' => $this->text,
-            'type' => $this->type,
+            'id'        => $this->id,
+            'text'      => $this->text,
+            'type'      => $this->type,
             'parent_id' => $this->parent_id,
-            'nestings' => self::collection(
+            'nestings'  => self::collection(
                 $this->whenLoaded('nestings')
             ),
         ];
     }
-
 }

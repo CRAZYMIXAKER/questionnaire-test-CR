@@ -15,8 +15,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AnswerController extends ApiController
 {
-    public function __construct(private readonly AnswerService $answerService
-    ) {}
+    public function __construct(
+        private readonly AnswerService $answerService
+    ) {
+    }
 
     /**
      * @param  \App\Http\Requests\Answer\StoreAnswerRequest  $request
@@ -43,7 +45,8 @@ class AnswerController extends ApiController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function storeTemporaryAnswer(StoreTemporaryAnswerRequest $request
+    public function storeTemporaryAnswer(
+        StoreTemporaryAnswerRequest $request
     ): JsonResponse {
         try {
             $this->answerService->storeTemporaryAnswer($request->validated());
@@ -52,7 +55,7 @@ class AnswerController extends ApiController
         } catch (NotFoundException $error) {
             return $this->clientErrorsResponse(
                 message: $error->getMessage(),
-                code: Response::HTTP_NOT_FOUND,
+                code   : Response::HTTP_NOT_FOUND,
             );
         } catch (Exception) {
             return $this->serverErrorResponse();
@@ -64,7 +67,8 @@ class AnswerController extends ApiController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getAnswersBySurveyId(GetAnswersBySurveyIdRequest $request
+    public function getAnswersBySurveyId(
+        GetAnswersBySurveyIdRequest $request
     ): JsonResponse {
         try {
             $answers = $this->answerService->getAnswersBySurveyId(

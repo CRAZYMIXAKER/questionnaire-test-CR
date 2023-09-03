@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Events\UserUpdated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Services\UserService;
@@ -12,8 +11,9 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
-
-    public function __construct(private readonly UserService $userService) {}
+    public function __construct(private readonly UserService $userService)
+    {
+    }
 
     /**
      * Handle an incoming authentication request.
@@ -24,9 +24,9 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-//        $this->userService::sendUserBroadcast(
-//            $this->userService::getUserByEmail($request->validated('email'))
-//        );
+        //        $this->userService::sendUserBroadcast(
+        //            $this->userService::getUserByEmail($request->validated('email'))
+        //        );
 
         return response()->noContent();
     }
@@ -42,9 +42,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-//        $this->userService::sendUserBroadcast(null);
+        //        $this->userService::sendUserBroadcast(null);
 
         return response()->noContent();
     }
-
 }

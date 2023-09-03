@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Events\UserUpdated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Mail\User\PasswordMail;
@@ -15,7 +14,9 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisteredUserController extends Controller
 {
-    public function __construct(private readonly UserService $userService) {}
+    public function __construct(private readonly UserService $userService)
+    {
+    }
 
     /**
      * Handle an incoming registration request.
@@ -24,8 +25,8 @@ class RegisteredUserController extends Controller
     public function store(RegisterRequest $request): Response
     {
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'     => $request->name,
+            'email'    => $request->email,
             'password' => Hash::make($request->password),
         ])->assignRole('user');
 
@@ -33,9 +34,8 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-//        $this->userService::sendUserBroadcast($user);
+        //        $this->userService::sendUserBroadcast($user);
 
         return response()->noContent();
     }
-
 }

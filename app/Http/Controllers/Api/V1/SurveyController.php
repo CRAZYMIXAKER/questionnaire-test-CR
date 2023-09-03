@@ -13,9 +13,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SurveyController extends ApiController
 {
-
-    public function __construct(private readonly SurveyService $surveyService
-    ) {}
+    public function __construct(
+        private readonly SurveyService $surveyService
+    ) {
+    }
 
     /**
      * @return \Illuminate\Http\JsonResponse
@@ -29,7 +30,7 @@ class SurveyController extends ApiController
         } catch (NotFoundException $error) {
             return $this->clientErrorsResponse(
                 message: $error->getMessage(),
-                code: Response::HTTP_NOT_FOUND,
+                code   : Response::HTTP_NOT_FOUND,
             );
         } catch (Exception) {
             return $this->serverErrorResponse();
@@ -52,7 +53,7 @@ class SurveyController extends ApiController
         } catch (NotFoundException $error) {
             return $this->clientErrorsResponse(
                 message: $error->getMessage(),
-                code: Response::HTTP_NOT_FOUND,
+                code   : Response::HTTP_NOT_FOUND,
             );
         } catch (Exception) {
             return $this->serverErrorResponse();
@@ -77,11 +78,10 @@ class SurveyController extends ApiController
         } catch (NotFoundException $error) {
             return $this->clientErrorsResponse(
                 message: $error->getMessage(),
-                code: Response::HTTP_NOT_FOUND,
+                code   : Response::HTTP_NOT_FOUND,
             );
         } catch (Exception) {
             return $this->serverErrorResponse();
         }
     }
-
 }

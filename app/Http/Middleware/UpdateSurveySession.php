@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UpdateSurveySession
 {
-
     /**
      * Handle an incoming request.
      *
@@ -41,5 +40,4 @@ class UpdateSurveySession
             $response->headers->setCookie($cookie);
         }
     }
-
 }

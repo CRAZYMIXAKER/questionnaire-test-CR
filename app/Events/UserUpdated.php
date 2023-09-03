@@ -13,7 +13,6 @@ use Illuminate\Queue\SerializesModels;
 
 class UserUpdated implements ShouldBroadcast
 {
-
     use Dispatchable;
     use InteractsWithSockets;
     use SerializesModels;
@@ -35,5 +34,4 @@ class UserUpdated implements ShouldBroadcast
     {
         return new Channel('user-updates');
     }
-
 }

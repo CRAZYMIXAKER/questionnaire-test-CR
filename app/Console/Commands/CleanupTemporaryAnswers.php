@@ -8,14 +8,12 @@ use Illuminate\Console\Command;
 
 class CleanupTemporaryAnswers extends Command
 {
-
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
     protected $signature = 'cleanup:temporary-answers';
-
     /**
      * The console command description.
      *
@@ -32,5 +30,4 @@ class CleanupTemporaryAnswers extends Command
 
         $this->info('Expired records cleaned up successfully.');
     }
-
 }

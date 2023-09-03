@@ -6,13 +6,9 @@ namespace App\Services;
 
 use App\Events\UserUpdated;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-
-use function PHPUnit\Framework\isNull;
 
 class UserService
 {
-
     /**
      * @param  string  $email
      *
@@ -50,5 +46,4 @@ class UserService
     {
         broadcast(new UserUpdated(self::prepareUserBroadcastData($user)));
     }
-
 }

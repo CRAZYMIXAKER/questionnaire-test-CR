@@ -49,7 +49,7 @@ class SurveyService
      * @return \Illuminate\Http\Resources\Json\JsonResource
      * @throws \App\Exceptions\NotFoundException
      */
-    public function getSurvey(int $surveyId): JsonResource
+    public function getSurvey($surveyId): JsonResource
     {
         $survey = $this->findSurvey($surveyId);
         $questions = $survey->questions->load('nestings');
@@ -57,7 +57,6 @@ class SurveyService
         if ($questions->isEmpty()) {
             throw new NotFoundException('Questions not found for this survey.');
         }
-
         return new SurveyResource($survey);
     }
 
