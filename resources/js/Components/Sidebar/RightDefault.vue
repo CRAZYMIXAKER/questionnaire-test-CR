@@ -1,5 +1,5 @@
 <template>
     <div>
-        <h1>NotFound</h1>
+        <h1>DefaultRightMenu</h1>
     </div>
 </template>

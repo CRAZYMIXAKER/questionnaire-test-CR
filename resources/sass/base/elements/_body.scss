@@ -1,5 +1,3 @@
-@import "@sass/abstracts/_abstracts.scss";
-
 * {
     margin: 0;
     padding: 0;
@@ -9,5 +7,5 @@
 body {
     color: var(--main-text-color);
     min-width: 320px;
-    padding: 20px;
+    padding: 0;
 }

@@ -1,19 +1,35 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useStore } from 'vuex';
+
+import MainLayout from '@/Layouts/Main';
+import SidebarLeftAdmin from '@/Components/Sidebar/LeftAdmin';
+import Home from '@/Pages/Home';
+
+// User
 import Login from '@/Pages/Auth/Login';
 import Register from '@/Pages/Auth/Register';
 import EmailVerify from '@/Pages/Auth/EmailVerify';
 import ForgotPassword from '@/Pages/Auth/ForgotPassword';
 import PasswordReset from '@/Pages/Auth/PasswordReset';
-import MainLayout from '@/Views/Layouts/Main';
-import SidebarDefault from '@/Views/Menu/Default';
-import Home from '@/Pages/Home';
+
+// Surveys
+import SurveysIndex from '@/Pages/Surveys/Index';
 import SurveysShow from '@/Pages/Surveys/Show';
 import SurveyAnswers from '@/Pages/Surveys/SurveyAnswers';
-import SurveysIndex from '@/Pages/Surveys/Index';
-import AdminIndex from '@/Pages/AdminDashboard/Index';
+
+// Admin - Surveys
+import AdminSurveysIndex from '@/Pages/Admin/Surveys/Index';
+import AdminSurveysCreate from '@/Pages/Admin/Surveys/Create';
+import AdminSurveysEdit from '@/Pages/Admin/Surveys/Edit';
+
+// Admin - Questions
+import AdminQuestionsIndex from '@/Pages/Admin/Questions/Index';
+import AdminQuestionsCreate from '@/Pages/Admin/Questions/Create';
+import AdminQuestionsEdit from '@/Pages/Admin/Questions/Edit';
+
+// Another
 import AccessDenied from '@/Pages/Errors/AccessDenied';
-import NotFound from '@/Pages/Errors/NotFound';
+import NotFound from '@/Pages/Errors/404';
 
 const checkAuth = (authRequired) => (to, from, next) => {
     const store = useStore();
@@ -56,8 +72,7 @@ const routes = [
                 path: 'login',
                 name: 'login',
                 components: {
-                    default: Login,
-                    menu: SidebarDefault,
+                    main: Login,
                 },
                 beforeEnter: checkAuth(false),
             },
@@ -65,8 +80,7 @@ const routes = [
                 path: 'register',
                 name: 'register',
                 components: {
-                    default: Register,
-                    menu: SidebarDefault,
+                    main: Register,
                 },
                 beforeEnter: checkAuth(false),
             },
@@ -74,8 +88,7 @@ const routes = [
                 path: 'email/verify',
                 name: 'email.verify',
                 components: {
-                    default: EmailVerify,
-                    menu: SidebarDefault,
+                    main: EmailVerify,
                 },
                 beforeEnter: checkAuth(true),
             },
@@ -83,8 +96,7 @@ const routes = [
                 path: 'forgot-password',
                 name: 'forgot.password',
                 components: {
-                    default: ForgotPassword,
-                    menu: SidebarDefault,
+                    main: ForgotPassword,
                 },
                 beforeEnter: checkAuth(false),
             },
@@ -92,8 +104,7 @@ const routes = [
                 path: 'password-reset/:token',
                 name: 'password.reset',
                 components: {
-                    default: PasswordReset,
-                    menu: SidebarDefault,
+                    main: PasswordReset,
                 },
                 beforeEnter: checkAuth(false),
             },
@@ -101,57 +112,100 @@ const routes = [
                 path: '',
                 name: 'home',
                 components: {
-                    default: Home,
-                    menu: SidebarDefault,
+                    'left-sidebar': SidebarLeftAdmin,
+                    main: Home,
                 },
             },
             {
                 path: 'surveys',
                 name: 'surveys.index',
                 components: {
-                    default: SurveysIndex,
-                    menu: SidebarDefault,
+                    'left-sidebar': SidebarLeftAdmin,
+                    main: SurveysIndex,
                 },
             },
             {
                 path: 'surveys/:survey_id',
                 name: 'surveys.show',
                 components: {
-                    default: SurveysShow,
-                    menu: SidebarDefault,
+                    'left-sidebar': SidebarLeftAdmin,
+                    main: SurveysShow,
                 },
             },
             {
                 path: 'surveys/:survey_id/answers',
                 name: 'survey.answers',
                 components: {
-                    default: SurveyAnswers,
-                    menu: SidebarDefault,
+                    'left-sidebar': SidebarLeftAdmin,
+                    main: SurveyAnswers,
                 },
             },
             {
-                path: 'admin/index',
-                name: 'admin.index',
-                components: {
-                    default: AdminIndex,
-                    menu: SidebarDefault,
-                },
+                path: 'admin/',
+                children: [
+                    {
+                        path: 'surveys',
+                        name: 'admin.surveys.index',
+                        components: {
+                            'left-sidebar': SidebarLeftAdmin,
+                            main: AdminSurveysIndex,
+                        },
+                    },
+                    {
+                        path: 'surveys/create',
+                        name: 'admin.surveys.create',
+                        components: {
+                            'left-sidebar': SidebarLeftAdmin,
+                            main: AdminSurveysCreate,
+                        },
+                    },
+                    {
+                        path: 'surveys/:survey_id/edit',
+                        name: 'admin.surveys.edit',
+                        components: {
+                            'left-sidebar': SidebarLeftAdmin,
+                            main: AdminSurveysEdit,
+                        },
+                    },
+                    {
+                        path: 'questions',
+                        name: 'admin.questions.index',
+                        components: {
+                            'left-sidebar': SidebarLeftAdmin,
+                            main: AdminQuestionsIndex,
+                        },
+                    },
+                    {
+                        path: 'questions/create',
+                        name: 'admin.questions.create',
+                        components: {
+                            'left-sidebar': SidebarLeftAdmin,
+                            main: AdminQuestionsCreate,
+                        },
+                    },
+                    {
+                        path: 'questions/:question_id/edit',
+                        name: 'admin.questions.edit',
+                        components: {
+                            'left-sidebar': SidebarLeftAdmin,
+                            main: AdminQuestionsEdit,
+                        },
+                    },
+                ],
                 beforeEnter: checkRole(['admin', 'super-admin']),
             },
             {
                 path: 'access-denied',
                 name: 'access.denied',
                 components: {
-                    default: AccessDenied,
-                    menu: SidebarDefault,
+                    main: AccessDenied,
                 },
             },
             {
                 name: 'not-found',
                 path: ':catchAll(.*)',
                 components: {
-                    default: NotFound,
-                    menu: SidebarDefault,
+                    main: NotFound,
                 },
             },
         ],
