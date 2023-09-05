@@ -8,6 +8,7 @@ use App\Exceptions\NotFoundException;
 use App\Http\Resources\SurveyResource;
 use App\Models\Survey;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorAlias;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SurveyService
@@ -49,7 +50,7 @@ class SurveyService
      * @return \Illuminate\Http\Resources\Json\JsonResource
      * @throws \App\Exceptions\NotFoundException
      */
-    public function getSurvey($surveyId): JsonResource
+    public function getSurvey(int $surveyId): JsonResource
     {
         $survey = $this->findSurvey($surveyId);
         $questions = $survey->questions->load('nestings');
@@ -57,7 +58,24 @@ class SurveyService
         if ($questions->isEmpty()) {
             throw new NotFoundException('Questions not found for this survey.');
         }
+
         return new SurveyResource($survey);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     * @throws \App\Exceptions\NotFoundException
+     */
+    public function getSurveysQuestions(): LengthAwarePaginatorAlias
+    {
+        $surveys = Survey::with('questions', 'questions.nestings')
+            ->paginate(16);
+
+        if ($surveys->isEmpty()) {
+            throw new NotFoundException('Surveys not found.');
+        }
+
+        return $surveys;
     }
 
     /**

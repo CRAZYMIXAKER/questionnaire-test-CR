@@ -6,9 +6,13 @@
                     <span>{{ survey.title }}</span>
                 </h5>
                 <div class="surveys__item-body">
-                    <div v-if="survey.questions" class="surveys__item-questions questions">
-                        <div v-for="question in survey.questions" class="questions__item">
-                            <p class="questions__item-text">{{ question.text }}</p>
+                    <div v-if="survey.questions"
+                         class="surveys__item-questions questions">
+                        <div v-for="question in survey.questions"
+                             class="questions__item">
+                            <p class="questions__item-text">{{
+                                    question.text
+                                }}</p>
                         </div>
                     </div>
                 </div>
@@ -17,6 +21,7 @@
                 <a class="surveys__item-button-link"><span>Show More</span></a>
             </div>
         </div>
+
         <div class="surveys__item-buttons">
             <router-link
                 :to="{name: 'surveys.show', params: {survey_id: survey.id}}"
@@ -25,15 +30,22 @@
                 <span>Open</span>
                 <i class="bi bi-link-45deg"></i>
             </router-link>
-<!--            <button v-if="isUserAdmin" class="btn btn-danger" type="button" @click="deleteSurvey(survey.id)">-->
-            <button v-if="isUserAdmin" class="btn btn-danger" type="button" @click="$emit('delete-survey', survey.id)">
+
+            <button v-if="isUserAdmin" class="btn btn-danger" type="button"
+                    @click="$emit('delete-survey', survey.id)">
                 <span>Delete</span>
                 <i class="bi bi-trash"></i>
             </button>
-            <button v-if="isUserAdmin" class="btn btn-light" type="button">
+
+            <router-link :to="{
+                                name: 'admin.surveys.edit',
+                                params: {survey_id: survey.id}
+                            }"
+                         class="btn btn-light"
+            >
                 <span>Edit</span>
                 <i class="bi bi-pencil"></i>
-            </button>
+            </router-link>
         </div>
     </div>
 </template>

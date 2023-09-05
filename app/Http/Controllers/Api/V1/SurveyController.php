@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Exceptions\NotFoundException;
 use App\Http\Requests\Survey\SurveyRequest;
+use App\Models\Survey;
 use App\Services\SurveyService;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -25,6 +26,25 @@ class SurveyController extends ApiController
     {
         try {
             $surveys = $this->surveyService->getAll();
+
+            return $this->successResponse($surveys->toArray());
+        } catch (NotFoundException $error) {
+            return $this->clientErrorsResponse(
+                message: $error->getMessage(),
+                code   : Response::HTTP_NOT_FOUND,
+            );
+        } catch (Exception) {
+            return $this->serverErrorResponse();
+        }
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function surveysQuestions(): JsonResponse
+    {
+        try {
+            $surveys = $this->surveyService->getSurveysQuestions();
 
             return $this->successResponse($surveys->toArray());
         } catch (NotFoundException $error) {
