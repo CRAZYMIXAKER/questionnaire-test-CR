@@ -1,9 +1,17 @@
 <template>
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
+        <div class="card-header py-3"
+             style="display:flex; justify-content: space-between"
+        >
             <h6 class="m-0 font-weight-bold text-primary">
                 DataTables Example
             </h6>
+            <router-link
+                :to="{name: 'admin.surveys.create'}"
+                class="btn btn-info"
+            >
+                <span>Create</span>
+            </router-link>
         </div>
         <div class="card-body">
             <div class="table-responsive">
