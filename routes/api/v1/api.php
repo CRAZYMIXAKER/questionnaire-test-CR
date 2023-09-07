@@ -33,7 +33,20 @@ Route::middleware('survey.session')->group(function () {
         [SurveyController::class, 'destroy']
     );
     Route::get(
-        '/surveys-questions',
+        '/survey-questions',
         [SurveyController::class, 'surveysQuestions']
     );
+    Route::delete(
+        '/survey-questions/{survey_id}/{question_id}',
+        [SurveyController::class, 'destroySurveysQuestion']
+    );
+
+    Route::match(
+        ['put', 'patch'],
+        '/surveys/{survey_id}',
+        [SurveyController::class, 'update']
+    );
+
+    // change question for surveys-questions
+    // add question for surveys-questions
 });

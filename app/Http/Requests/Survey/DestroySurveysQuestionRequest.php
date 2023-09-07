@@ -4,7 +4,7 @@ namespace App\Http\Requests\Survey;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SurveyRequest extends FormRequest
+class DestroySurveysQuestionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,8 @@ class SurveyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'survey_id' => ['required', 'int'],
-            'title'     => ['max:255'],
+            'survey_id'   => ['required', 'int'],
+            'question_id' => ['required', 'int'],
         ];
     }
 
@@ -33,7 +33,8 @@ class SurveyRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'survey_id' => request()->survey_id,
+            'survey_id'   => request()->survey_id,
+            'question_id' => request()->question_id,
         ]);
     }
 }

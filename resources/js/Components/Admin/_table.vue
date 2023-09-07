@@ -80,11 +80,12 @@
                                 <span>Delete</span>
                                 <i class="bi bi-trash"></i>
                             </button>
-                            <router-link :to="{
+                            <router-link
+                                :to="{
                                 name: 'admin.surveys.edit',
                                 params: {survey_id: survey.id}
                             }"
-                                         class="btn btn-light"
+                                class="btn btn-light"
                             >
                                 <span>Edit</span>
                                 <i class="bi bi-pencil"></i>

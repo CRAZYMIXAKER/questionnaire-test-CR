@@ -13,6 +13,7 @@
 
             <footer-default/>
         </div>
+
         <router-view id="right-sidebar" name="right-sidebar"/>
     </div>
 </template>

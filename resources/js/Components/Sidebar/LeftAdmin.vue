@@ -1,6 +1,9 @@
-<template v-if="isAdmin || isSuperAdmin">
-    <ul id="accordionSidebar"
-        class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion">
+<template>
+    <ul
+        v-if="isAdmin || isSuperAdmin"
+        id="accordionSidebar"
+        class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+    >
 
         <router-link
             :to="{ name: 'home' }"
@@ -92,10 +95,8 @@ import { useStore } from 'vuex';
 const store = useStore();
 const user = computed(() => store.getters.user);
 
-// const isAdmin = user.roleses_name.includes('admin');
-// const isSuperAdmin = user.roleses_name.includes('super-admin');
-const isAdmin = true;
-const isSuperAdmin = true;
+const isAdmin = user.value?.roleses_name.includes('admin') ?? null;
+const isSuperAdmin = user.value?.roleses_name.includes('super-admin') ?? null;
 </script>
 
 <style lang="scss" scoped>

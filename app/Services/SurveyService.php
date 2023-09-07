@@ -53,11 +53,7 @@ class SurveyService
     public function getSurvey(int $surveyId): JsonResource
     {
         $survey = $this->findSurvey($surveyId);
-        $questions = $survey->questions->load('nestings');
-
-        if ($questions->isEmpty()) {
-            throw new NotFoundException('Questions not found for this survey.');
-        }
+        $survey->questions->load('nestings');
 
         return new SurveyResource($survey);
     }
@@ -82,11 +78,38 @@ class SurveyService
      * @param  int  $surveyId
      *
      * @return void
+     * @throws \App\Exceptions\NotFoundException
      */
     public function deleteSurvey(int $surveyId): void
     {
-        $survey = Survey::find($surveyId);
+        $survey = $this->findSurvey($surveyId);
         $survey->questions()->detach();
         $survey->delete();
+    }
+
+    /**
+     * @param  int  $surveyId
+     * @param  int  $questionId
+     *
+     * @return void
+     * @throws \App\Exceptions\NotFoundException
+     */
+    public function deleteSurveysQuestion(int $surveyId, int $questionId): void
+    {
+        $survey = $this->findSurvey($surveyId);
+        $survey->questions()->detach($questionId);
+    }
+
+    /**
+     * @param  int  $surveyId
+     * @param  array  $data
+     *
+     * @return void
+     * @throws \App\Exceptions\NotFoundException
+     */
+    public function updateSurvey(int $surveyId, array $data): void
+    {
+        $survey = $this->findSurvey($surveyId);
+        $survey->update($data);
     }
 }
