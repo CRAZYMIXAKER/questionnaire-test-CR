@@ -4,7 +4,7 @@ namespace App\Http\Requests\Survey;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DestroySurveysQuestionRequest extends FormRequest
+class DestroySurveyQuestionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

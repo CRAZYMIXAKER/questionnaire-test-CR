@@ -6,9 +6,9 @@ namespace App\Services;
 
 use App\Exceptions\NotFoundException;
 use App\Http\Resources\SurveyResource;
+use App\Models\Question;
 use App\Models\Survey;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorAlias;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SurveyService

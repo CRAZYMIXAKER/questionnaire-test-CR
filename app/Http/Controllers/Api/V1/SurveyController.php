@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api\V1;
 
 use App\Exceptions\NotFoundException;
-use App\Http\Requests\Survey\DestroySurveysQuestionRequest;
+use App\Http\Requests\Survey\DestroySurveyQuestionRequest;
 use App\Http\Requests\Survey\SurveyRequest;
 use App\Services\SurveyService;
 use Exception;
@@ -105,8 +105,8 @@ class SurveyController extends ApiController
         }
     }
 
-    public function destroySurveysQuestion(
-        DestroySurveysQuestionRequest $request
+    public function destroySurveyQuestion(
+        DestroySurveyQuestionRequest $request
     ): JsonResponse {
         try {
             $this->surveyService->deleteSurveysQuestion(

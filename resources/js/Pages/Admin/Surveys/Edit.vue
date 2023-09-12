@@ -1,5 +1,10 @@
 <template>
     <div>
+        <question-selection-modal
+            :modal-status="modalStatus"
+            :survey-id="survey.values.id"
+            @update-modal-status="modalStatus = $event"
+        />
         <h1 class="h3 mb-4 text-gray-800">Admin Edit Survey Page</h1>
         <div>
             <div style="display: flex; column-gap: 12px;">
@@ -16,9 +21,9 @@
                 </button>
             </div>
             <hr>
-            <div>Add question</div>
-            <div>Delete question</div>
-            <div>Change question</div>
+            <button class="btn btn-info" @click="openQuestionSelectionModal">
+                Add question
+            </button>
             <div>
                 <div
                     v-for="question in survey.values.questions"
@@ -48,7 +53,6 @@
                     <div v-if="question.type === 'textarea'">
                         <label>Surveys Title</label>
                         <span>{{ question.text }}</span>
-                        <!--                    <input v-model="question.text" type="text">-->
                         <hr>
                     </div>
 
@@ -56,12 +60,10 @@
                         <div>
                             <label>Selects Question:</label>
                             <span>{{ question.text }}</span>
-                            <!--                        <input v-model="question.text" type="text">-->
                         </div>
                         <div v-for="nesting in question.nestings">
                             <label>Answer choice:</label>
                             <span>{{ nesting.text }}</span>
-                            <!--                        <input v-model="nesting.text" type="text">-->
                         </div>
                         <hr>
                     </div>
@@ -70,12 +72,10 @@
                         <div>
                             <label>Question:</label>
                             <span>{{ question.text }}</span>
-                            <!--                        <input v-model="question.text" type="text">-->
                         </div>
                         <div v-for="nesting in question.nestings">
                             <label>Subquestion:</label>
                             <span>{{ nesting.text }}</span>
-                            <!--                        <input v-model="nesting.text" type="text">-->
                         </div>
                         <hr>
                     </div>
@@ -86,6 +86,7 @@
 </template>
 
 <script setup>
+import QuestionSelectionModal from '@/Components/Admin/QuestionSelectionModal';
 import { computed, onMounted, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { notify } from '@kyvg/vue3-notification';
@@ -94,6 +95,9 @@ const route = useRoute();
 const survey = reactive([]);
 const originalSurveyTitle = ref('');
 const isLoading = ref(true);
+const modalStatus = ref(false);
+
+const showUpdateSurveysButton = computed(() => !isLoading.value && survey.values.title !== originalSurveyTitle.value);
 
 const getSurvey = () => {
     axios.get(`/api/v1/surveys/${route.params.survey_id}`)
@@ -106,17 +110,25 @@ const getSurvey = () => {
 };
 
 const updateSurvey = () => {
-axios.put(`/api/v1/surveys/${survey.values.id}`, survey.values)
-    .then(res => console.log(res))
-    .catch(e => console.log(e));
+    axios.put(`/api/v1/surveys/${survey.values.id}`, survey.values)
+        .then(res => {
+            originalSurveyTitle.value = survey.values.title;
+            notify({
+                text: res.data.message,
+                type: 'info',
+                speed: 1000,
+                duration: 5000,
+            });
+        })
+        .catch(e => console.log(e));
 };
 
 const deleteSurveysQuestion = (questionId) => {
-    axios.delete(`/api/v1/survey-questions/${route.params.survey_id}/${questionId}`)
+    axios.delete(`/api/v1/survey-questions/${survey.values.id}/${questionId}`)
         .then(res => {
             getSurvey();
             notify({
-                text: res.message,
+                text: res.data.message,
                 type: 'info',
                 speed: 1000,
                 duration: 5000,
@@ -126,6 +138,11 @@ const deleteSurveysQuestion = (questionId) => {
 };
 
 onMounted(() => getSurvey());
-const showUpdateSurveysButton = computed(() => !isLoading.value && survey.values.title !== originalSurveyTitle.value);
 
+const openQuestionSelectionModal = () => {
+    console.log('m-1',modalStatus.value);
+    modalStatus.value = true;
+    console.log('m-2',modalStatus.value);
+    $('#questionSelectionModal').modal('show');
+};
 </script>
