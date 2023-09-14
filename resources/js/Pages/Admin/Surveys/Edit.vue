@@ -87,7 +87,7 @@
 
 <script setup>
 import QuestionSelectionModal from '@/Components/Admin/QuestionSelectionModal';
-import { computed, onMounted, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { notify } from '@kyvg/vue3-notification';
 
@@ -97,7 +97,17 @@ const originalSurveyTitle = ref('');
 const isLoading = ref(true);
 const modalStatus = ref(false);
 
-const showUpdateSurveysButton = computed(() => !isLoading.value && survey.values.title !== originalSurveyTitle.value);
+const showUpdateSurveysButton = computed(
+    () =>
+        !isLoading.value &&
+        survey.values.title !== originalSurveyTitle.value,
+);
+
+const onModalStatusChange = () => {
+    if (!modalStatus.value) {
+        getSurvey();
+    }
+};
 
 const getSurvey = () => {
     axios.get(`/api/v1/surveys/${route.params.survey_id}`)
@@ -124,7 +134,7 @@ const updateSurvey = () => {
 };
 
 const deleteSurveysQuestion = (questionId) => {
-    axios.delete(`/api/v1/survey-questions/${survey.values.id}/${questionId}`)
+    axios.delete(`/api/v1/survey/questions/${survey.values.id}/${questionId}`)
         .then(res => {
             getSurvey();
             notify({
@@ -139,10 +149,13 @@ const deleteSurveysQuestion = (questionId) => {
 
 onMounted(() => getSurvey());
 
+watch(() => modalStatus.value, onModalStatusChange);
+
 const openQuestionSelectionModal = () => {
-    console.log('m-1',modalStatus.value);
     modalStatus.value = true;
-    console.log('m-2',modalStatus.value);
-    $('#questionSelectionModal').modal('show');
+
+    if (modalStatus.value) {
+        $('#questionSelectionModal').modal('show');
+    }
 };
 </script>

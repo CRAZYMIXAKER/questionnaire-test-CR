@@ -19,14 +19,13 @@ class QuestionService
     public function getNotSurveyQuestions(
         int $surveyId
     ): LengthAwarePaginatorAlias {
-        $questions = Question::whereDoesntHave('surveys', function ($query) {
-            $query->where('survey_id', 13);
-        })->paginate(1);
-
-        if ($questions->isEmpty()) {
-            throw new NotFoundException('Questions not found.');
-        }
-
-        return $questions;
+        return Question::whereDoesntHave(
+            'surveys',
+            function ($query) use ($surveyId) {
+                $query->where('survey_id', $surveyId);
+            }
+        )
+            ->where('parent_id', '=', null)
+            ->paginate(10);
     }
 }

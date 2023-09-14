@@ -9,7 +9,9 @@ use App\Http\Resources\SurveyResource;
 use App\Models\Question;
 use App\Models\Survey;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorAlias;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Resources\Json\JsonResource;
+use InvalidArgumentException;
 
 class SurveyService
 {
@@ -111,5 +113,25 @@ class SurveyService
     {
         $survey = $this->findSurvey($surveyId);
         $survey->update($data);
+    }
+
+    /**
+     * @param  int  $surveyId
+     * @param  array  $questionIds
+     *
+     * @return void
+     * @throws \App\Exceptions\NotFoundException
+     */
+    public function storeQuestions(int $surveyId, array $questionIds): void
+    {
+        $survey = $this->findSurvey($surveyId);
+
+        try {
+            Question::findOrFail($questionIds);
+        } catch (ModelNotFoundException $e) {
+            throw new NotFoundException("Questions not found");
+        }
+
+        $survey->questions()->attach($questionIds);
     }
 }

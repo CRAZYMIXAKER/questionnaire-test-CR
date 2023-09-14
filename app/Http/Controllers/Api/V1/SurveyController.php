@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Exceptions\NotFoundException;
 use App\Http\Requests\Survey\DestroySurveyQuestionRequest;
+use App\Http\Requests\Survey\SurveyQuestionRequest;
 use App\Http\Requests\Survey\SurveyRequest;
 use App\Services\SurveyService;
 use Exception;
@@ -105,7 +106,12 @@ class SurveyController extends ApiController
         }
     }
 
-    public function destroySurveyQuestion(
+    /**
+     * @param  \App\Http\Requests\Survey\DestroySurveyQuestionRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroyQuestion(
         DestroySurveyQuestionRequest $request
     ): JsonResponse {
         try {
@@ -142,6 +148,32 @@ class SurveyController extends ApiController
 
             return $this->successResponse(
                 message: 'Survey was successful updated'
+            );
+        } catch (NotFoundException $error) {
+            return $this->clientErrorsResponse(
+                message: $error->getMessage(),
+                code   : Response::HTTP_NOT_FOUND,
+            );
+        } catch (Exception) {
+            return $this->serverErrorResponse();
+        }
+    }
+
+    /**
+     * @param  \App\Http\Requests\Survey\SurveyQuestionRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storeQuestions(SurveyQuestionRequest $request): JsonResponse
+    {
+        try {
+            $this->surveyService->storeQuestions(
+                $request->validated('survey_id'),
+                $request->validated('question_ids'),
+            );
+
+            return $this->successResponse(
+                message: 'Question/-s for survey was/were successful added!'
             );
         } catch (NotFoundException $error) {
             return $this->clientErrorsResponse(

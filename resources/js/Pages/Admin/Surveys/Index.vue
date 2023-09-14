@@ -21,7 +21,7 @@ const surveys = reactive([]);
 const pagination = reactive([]);
 
 const getSurveys = (page = 1) => {
-    axios.get(`/api/v1/survey-questions?page=${page}`)
+    axios.get(`/api/v1/survey/questions?page=${page}`)
         .then(res => {
             surveys.values = res.data.data.data;
             pagination.values = res.data.data;

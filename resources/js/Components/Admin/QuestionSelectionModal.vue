@@ -10,8 +10,12 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content" style="background: mediumaquamarine;">
                 <div class="modal-header">
-                    <h5 id="questionSelectionModalLabel" class="modal-title">
-                        Выберите вопросы для добавления</h5>
+                    <h5
+                        id="questionSelectionModalLabel"
+                        class="modal-title"
+                    >
+                        Check question
+                    </h5>
                     <button
                         aria-label="Close"
                         class="close"
@@ -23,23 +27,42 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <ul>
-                        <li v-for="question in questions" :key="question.id">
-                            <input v-model="selectedQuestions"
-                                   :value="question.id"
-                                   type="checkbox"> {{ question.text }}
+                    <ul v-if="questions.values.length>0">
+                        <li
+                            v-for="question in questions.values"
+                            :key="question.id"
+                        >
+                            <input
+                                v-model="checkedQuestions"
+                                :value="question.id"
+                                type="checkbox"
+                            >
+                            {{ question.text }}
                         </li>
                     </ul>
+                    <div v-else>No Questions</div>
                 </div>
-                <div class="pagination">
-                    <pagination-main :pagination="pagination"/>
+                <div v-if="pagination.values.length>0" class="pagination">
+                    <pagination-main
+                        :pagination="pagination.values"
+                        @update-page="getNotSurveyQuestions($event)"
+                    />
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" data-dismiss="modal"
-                            type="button" @click="closeModal">Закрыть
+                    <button
+                        class="btn btn-secondary"
+                        data-dismiss="modal"
+                        type="button"
+                        @click="closeModal"
+                    >
+                        Close
                     </button>
-                    <button class="btn btn-primary" type="button"
-                            @click="addSurveyQuestions">Добавить вопросы
+                    <button
+                        class="btn btn-primary"
+                        type="button"
+                        @click="addSurveyQuestions"
+                    >
+                        Add question/-s
                     </button>
                 </div>
             </div>
@@ -48,26 +71,29 @@
 </template>
 
 <script setup>
-import { computed, defineEmits, reactive, watch } from 'vue';
+import { defineEmits, reactive, ref, watch } from 'vue';
 import PaginationMain from '@/Components/Pagination/Main.vue';
+import { notify } from '@kyvg/vue3-notification';
 
 const emit = defineEmits();
 
-const checkedQuestions = reactive([]);
+const checkedQuestions = ref([]);
 const questions = reactive([]);
 const pagination = reactive([]);
-const { surveyId, modalStatus } = defineProps(['surveyId', 'modalStatus']);
+
+const props = defineProps({
+    surveyId: { type: Number },
+    modalStatus: { type: Boolean },
+});
 
 const closeModal = () => {
-    console.log(modalStatus);
-    emit('updateModalStatus', false);
     $('#questionSelectionModal').modal('hide');
+    emit('update-modal-status', false);
     questions.values = [];
-    console.log(modalStatus);
 };
 
-const getNotSurveyQuestions = () => {
-    axios.get(`/api/v1/not-survey-questions/${surveyId}`)
+const getNotSurveyQuestions = (page = 1) => {
+    axios.get(`/api/v1/not-survey-questions/${props.surveyId}?page=${page}`)
         .then(res => {
             questions.values = res.data.data.data;
             pagination.values = res.data.data;
@@ -75,21 +101,36 @@ const getNotSurveyQuestions = () => {
         .catch(e => console.log(e));
 };
 
-// watch(modalStatus, (newValue) => {
-//     console.log('aaaaa');
-//
-//     if (newValue) {
-//         console.log('aaaaabbbbbb');
-//         getNotSurveyQuestions();
-//     }
-// });
-
-watch(() => modalStatus, (newModalStatus, oldModalStatus) => {
-    console.log('modalStatus изменился:', newModalStatus);
-
-    if (newModalStatus) {
+const onModalStatusChange = () => {
+    if (props.modalStatus) {
+        getNotSurveyQuestions();
     }
-});
+};
 
-const addSurveyQuestions = () => {};
+watch(() => props.modalStatus, onModalStatusChange);
+
+const addSurveyQuestions = () => {
+    axios.post('/api/v1/survey/questions/create', {
+        survey_id: props.surveyId,
+        question_ids: checkedQuestions.value,
+    })
+        .then(res => {
+            closeModal();
+            notify({
+                text: res.data.message,
+                type: 'info',
+                speed: 1000,
+                duration: 5000,
+            });
+        })
+        .catch(e => {
+            closeModal();
+            notify({
+                text: e,
+                type: 'error',
+                speed: 1000,
+                duration: 5000,
+            });
+        });
+};
 </script>
