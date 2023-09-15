@@ -6,8 +6,9 @@
         class="modal fade"
         role="dialog"
         tabindex="-1"
+        @click.stop="closeModal"
     >
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" role="document" @click.stop>
             <div class="modal-content" style="background: mediumaquamarine;">
                 <div class="modal-header">
                     <h5
@@ -27,9 +28,9 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <ul v-if="questions.values.length>0">
+                    <ul v-if="questions.length>0">
                         <li
-                            v-for="question in questions.values"
+                            v-for="question in questions"
                             :key="question.id"
                         >
                             <input
@@ -42,22 +43,17 @@
                     </ul>
                     <div v-else>No Questions</div>
                 </div>
-                <div v-if="pagination.values.length>0" class="pagination">
+
+                <div v-if="pagination.length>0" class="pagination">
                     <pagination-main
-                        :pagination="pagination.values"
+                        :pagination="pagination"
                         @update-page="getNotSurveyQuestions($event)"
                     />
                 </div>
+
                 <div class="modal-footer">
                     <button
-                        class="btn btn-secondary"
-                        data-dismiss="modal"
-                        type="button"
-                        @click="closeModal"
-                    >
-                        Close
-                    </button>
-                    <button
+                        v-if="checkedQuestions.length > 0"
                         class="btn btn-primary"
                         type="button"
                         @click="addSurveyQuestions"
@@ -71,15 +67,15 @@
 </template>
 
 <script setup>
-import { defineEmits, reactive, ref, watch } from 'vue';
 import PaginationMain from '@/Components/Pagination/Main.vue';
 import { notify } from '@kyvg/vue3-notification';
+import { defineEmits, ref, watch } from 'vue';
 
 const emit = defineEmits();
 
 const checkedQuestions = ref([]);
-const questions = reactive([]);
-const pagination = reactive([]);
+const questions = ref([]);
+const pagination = ref([]);
 
 const props = defineProps({
     surveyId: { type: Number },
@@ -89,14 +85,14 @@ const props = defineProps({
 const closeModal = () => {
     $('#questionSelectionModal').modal('hide');
     emit('update-modal-status', false);
-    questions.values = [];
+    checkedQuestions.value = [];
 };
 
 const getNotSurveyQuestions = (page = 1) => {
     axios.get(`/api/v1/not-survey-questions/${props.surveyId}?page=${page}`)
         .then(res => {
-            questions.values = res.data.data.data;
-            pagination.values = res.data.data;
+            questions.value = res.data.data.data;
+            pagination.value = res.data.data;
         })
         .catch(e => console.log(e));
 };

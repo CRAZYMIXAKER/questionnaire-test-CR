@@ -31,17 +31,22 @@
                 <i class="bi bi-link-45deg"></i>
             </router-link>
 
-            <button v-if="isUserAdmin" class="btn btn-danger" type="button"
-                    @click="$emit('delete-survey', survey.id)">
+            <button
+                v-if="isUserAdmin"
+                class="btn btn-danger"
+                type="button"
+                @click="$emit('delete-survey', survey.id)"
+            >
                 <span>Delete</span>
                 <i class="bi bi-trash"></i>
             </button>
 
-            <router-link :to="{
-                                name: 'admin.surveys.edit',
-                                params: {survey_id: survey.id}
-                            }"
-                         class="btn btn-light"
+            <router-link
+                :to="{
+                name: 'admin.surveys.edit',
+                params: {survey_id: survey.id}
+            }"
+                class="btn btn-light"
             >
                 <span>Edit</span>
                 <i class="bi bi-pencil"></i>

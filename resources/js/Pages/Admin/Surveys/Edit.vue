@@ -2,15 +2,16 @@
     <div>
         <question-selection-modal
             :modal-status="modalStatus"
-            :survey-id="survey.values.id"
+            :survey-id="survey.id"
             @update-modal-status="modalStatus = $event"
         />
+
         <h1 class="h3 mb-4 text-gray-800">Admin Edit Survey Page</h1>
         <div>
             <div style="display: flex; column-gap: 12px;">
                 <div>
                     <label>Surveys Title</label>
-                    <input v-model="survey.values.title" type="text">
+                    <input v-model="survey.title" type="text">
                 </div>
                 <button
                     v-if="showUpdateSurveysButton"
@@ -20,79 +21,33 @@
                     Update
                 </button>
             </div>
-            <hr>
+            <hr style="width: 100%;">
             <button class="btn btn-info" @click="openQuestionSelectionModal">
                 Add question
             </button>
-            <div>
-                <div
-                    v-for="question in survey.values.questions"
-                    style="display: flex; column-gap: 12px;"
-                >
-                    <div
-                        style="display: flex; flex-direction: column; row-gap: 10px"
-                    >
-                        <button
-                            class="btn btn-danger"
-                            type="button"
-                            @click="deleteSurveysQuestion(question.id)"
-                        >
-                            <i class="bi bi-trash"></i>
-                        </button>
-                        <router-link
-                            :to="{
-                                name: 'admin.surveys.edit',
-                                params: {survey_id: survey.id}
-                            }"
-                            class="btn btn-info"
-                        >
-                            <i class="bi bi-pencil"></i>
-                        </router-link>
-                    </div>
 
-                    <div v-if="question.type === 'textarea'">
-                        <label>Surveys Title</label>
-                        <span>{{ question.text }}</span>
-                        <hr>
-                    </div>
-
-                    <div v-if="question.type === 'select'">
-                        <div>
-                            <label>Selects Question:</label>
-                            <span>{{ question.text }}</span>
-                        </div>
-                        <div v-for="nesting in question.nestings">
-                            <label>Answer choice:</label>
-                            <span>{{ nesting.text }}</span>
-                        </div>
-                        <hr>
-                    </div>
-
-                    <div v-if="question.type === 'subquestion'">
-                        <div>
-                            <label>Question:</label>
-                            <span>{{ question.text }}</span>
-                        </div>
-                        <div v-for="nesting in question.nestings">
-                            <label>Subquestion:</label>
-                            <span>{{ nesting.text }}</span>
-                        </div>
-                        <hr>
-                    </div>
-                </div>
+            <div v-if="survey.questions?.length>0">
+                <question-item
+                    v-for="question in survey.questions"
+                    :question="question"
+                    @delete-surveys-question="deleteSurveysQuestion($event)"
+                />
             </div>
+            <div v-else>no questions</div>
         </div>
     </div>
 </template>
 
 <script setup>
 import QuestionSelectionModal from '@/Components/Admin/QuestionSelectionModal';
-import { computed, onMounted, reactive, ref, watch } from 'vue';
+import QuestionItem from '@/Components/Admin/SurveysEdit/QuestionItem';
+
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { notify } from '@kyvg/vue3-notification';
 
 const route = useRoute();
-const survey = reactive([]);
+const survey = ref([]);
 const originalSurveyTitle = ref('');
 const isLoading = ref(true);
 const modalStatus = ref(false);
@@ -100,7 +55,7 @@ const modalStatus = ref(false);
 const showUpdateSurveysButton = computed(
     () =>
         !isLoading.value &&
-        survey.values.title !== originalSurveyTitle.value,
+        survey.value.title !== originalSurveyTitle.value,
 );
 
 const onModalStatusChange = () => {
@@ -112,17 +67,17 @@ const onModalStatusChange = () => {
 const getSurvey = () => {
     axios.get(`/api/v1/surveys/${route.params.survey_id}`)
         .then(res => {
-            survey.values = res.data.data;
-            originalSurveyTitle.value = survey.values.title;
+            survey.value = res.data.data;
+            originalSurveyTitle.value = survey.value.title;
             isLoading.value = false;
         })
         .catch(e => console.log(e));
 };
 
 const updateSurvey = () => {
-    axios.put(`/api/v1/surveys/${survey.values.id}`, survey.values)
+    axios.put(`/api/v1/surveys/${survey.value.id}`, survey.value)
         .then(res => {
-            originalSurveyTitle.value = survey.values.title;
+            originalSurveyTitle.value = survey.value.title;
             notify({
                 text: res.data.message,
                 type: 'info',
@@ -134,7 +89,7 @@ const updateSurvey = () => {
 };
 
 const deleteSurveysQuestion = (questionId) => {
-    axios.delete(`/api/v1/survey/questions/${survey.values.id}/${questionId}`)
+    axios.delete(`/api/v1/survey/questions/${survey.value.id}/${questionId}`)
         .then(res => {
             getSurvey();
             notify({
@@ -158,4 +113,5 @@ const openQuestionSelectionModal = () => {
         $('#questionSelectionModal').modal('show');
     }
 };
+
 </script>

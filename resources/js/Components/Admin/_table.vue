@@ -70,10 +70,12 @@
 
                                 </template>
                             </table>
+                            <div v-else>Not Found</div>
                         </td>
                         <td>
                             <button
                                 class="btn btn-danger"
+                                style="margin-right: 12px"
                                 type="button"
                                 @click="$emit('delete-survey', survey.id)"
                             >
