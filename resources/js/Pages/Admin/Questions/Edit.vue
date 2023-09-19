@@ -167,12 +167,9 @@ const changeQuestionType = () => {
 };
 
 const deleteQuestion = (questionId) => {
-    console.log(question.value.id);
-
     axios.delete(`/api/v1/questions/${questionId}`)
         .then(res => {
             getQuestion();
-            // question.value = res.data.data;
             notify({
                 text: res.data.message,
                 type: 'info',
