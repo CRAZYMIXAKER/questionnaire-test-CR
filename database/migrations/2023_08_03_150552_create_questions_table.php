@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-
     /**
      * Run the migrations.
      */
@@ -13,10 +12,13 @@ return new class extends Migration {
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->string('text')->unique();
+            $table->string('text');
             $table->enum('type', ['textarea', 'select', 'subquestion'])
-              ->default('textarea');
-            $table->integer('parent_id')->nullable();
+                ->default('textarea');
+            $table->foreignId('parent_id')
+                ->nullable()
+                ->constrained('questions')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -28,5 +30,4 @@ return new class extends Migration {
     {
         Schema::dropIfExists('questions');
     }
-
 };

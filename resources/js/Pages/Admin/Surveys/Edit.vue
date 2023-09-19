@@ -22,7 +22,7 @@
                 </button>
             </div>
             <hr style="width: 100%;">
-            <button class="btn btn-info" @click="openQuestionSelectionModal">
+            <button class="btn btn-info" @click="showQuestionSelectionModal">
                 Add question
             </button>
 
@@ -89,7 +89,7 @@ const updateSurvey = () => {
 };
 
 const deleteSurveysQuestion = (questionId) => {
-    axios.delete(`/api/v1/survey/questions/${survey.value.id}/${questionId}`)
+    axios.delete(`/api/v1/surveys/${survey.value.id}/questions/${questionId}`)
         .then(res => {
             getSurvey();
             notify({
@@ -106,12 +106,11 @@ onMounted(() => getSurvey());
 
 watch(() => modalStatus.value, onModalStatusChange);
 
-const openQuestionSelectionModal = () => {
+const showQuestionSelectionModal = () => {
     modalStatus.value = true;
 
     if (modalStatus.value) {
-        $('#questionSelectionModal').modal('show');
+        $('#modalWindow').modal('show');
     }
 };
-
 </script>

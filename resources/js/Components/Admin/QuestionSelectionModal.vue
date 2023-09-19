@@ -1,48 +1,26 @@
 <template>
-    <div
-        id="questionSelectionModal"
-        aria-hidden="true"
-        aria-labelledby="questionSelectionModalLabel"
-        class="modal fade"
-        role="dialog"
-        tabindex="-1"
-        @click.stop="closeModal"
-    >
-        <div class="modal-dialog" role="document" @click.stop>
-            <div class="modal-content" style="background: mediumaquamarine;">
-                <div class="modal-header">
-                    <h5
-                        id="questionSelectionModalLabel"
-                        class="modal-title"
+    <modal-window :close-function="closeModal">
+        <template #title>Check question</template>
+        <template #body>
+            <div>
+                <ul v-if="questions.length>0">
+                    <li
+                        v-for="question in questions"
+                        :key="question.id"
+                        class="form-check"
                     >
-                        Check question
-                    </h5>
-                    <button
-                        aria-label="Close"
-                        class="close"
-                        data-dismiss="modal"
-                        type="button"
-                        @click="closeModal"
-                    >
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <ul v-if="questions.length>0">
-                        <li
-                            v-for="question in questions"
-                            :key="question.id"
+                        <input
+                            v-model="checkedQuestions"
+                            :value="question.id"
+                            class="form-check-input"
+                            type="checkbox"
                         >
-                            <input
-                                v-model="checkedQuestions"
-                                :value="question.id"
-                                type="checkbox"
-                            >
+                        <label class="form-check-label">
                             {{ question.text }}
-                        </li>
-                    </ul>
-                    <div v-else>No Questions</div>
-                </div>
+                        </label>
+                    </li>
+                </ul>
+                <div v-else>No Questions</div>
 
                 <div v-if="pagination.length>0" class="pagination">
                     <pagination-main
@@ -50,24 +28,24 @@
                         @update-page="getNotSurveyQuestions($event)"
                     />
                 </div>
-
-                <div class="modal-footer">
-                    <button
-                        v-if="checkedQuestions.length > 0"
-                        class="btn btn-primary"
-                        type="button"
-                        @click="addSurveyQuestions"
-                    >
-                        Add question/-s
-                    </button>
-                </div>
             </div>
-        </div>
-    </div>
+        </template>
+        <template #footer>
+            <button
+                v-if="checkedQuestions.length > 0"
+                class="btn btn-primary"
+                type="button"
+                @click="addSurveyQuestions"
+            >
+                Add question/-s
+            </button>
+        </template>
+    </modal-window>
 </template>
 
 <script setup>
-import PaginationMain from '@/Components/Pagination/Main.vue';
+import ModalWindow from '@/Components/ModalWindow/Default';
+import PaginationMain from '@/Components/Pagination/Main';
 import { notify } from '@kyvg/vue3-notification';
 import { defineEmits, ref, watch } from 'vue';
 
@@ -83,7 +61,6 @@ const props = defineProps({
 });
 
 const closeModal = () => {
-    $('#questionSelectionModal').modal('hide');
     emit('update-modal-status', false);
     checkedQuestions.value = [];
 };

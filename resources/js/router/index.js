@@ -184,7 +184,7 @@ const routes = [
                         },
                     },
                     {
-                        path: 'questions/:question_id/edit',
+                        path: 'questions/:id/edit',
                         name: 'admin.questions.edit',
                         components: {
                             'left-sidebar': SidebarLeftAdmin,
@@ -202,7 +202,13 @@ const routes = [
                 },
             },
             {
-                name: 'not-found',
+                path: 'not-found',
+                name: 'not.found',
+                components: {
+                    main: NotFound,
+                },
+            },
+            {
                 path: ':catchAll(.*)',
                 components: {
                     main: NotFound,

@@ -12,9 +12,9 @@
                 </button>
                 <router-link
                     :to="{
-                    name: 'admin.questions.edit',
-                    params: {question_id: question.id}
-                }"
+                        name: 'admin.questions.edit',
+                        params: {id: question.id}
+                    }"
                     class="btn btn-info"
                 >
                     <i class="bi bi-pencil"></i>

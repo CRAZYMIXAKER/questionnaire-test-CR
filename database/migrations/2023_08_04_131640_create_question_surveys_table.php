@@ -5,7 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-
     /**
      * Run the migrations.
      */
@@ -13,8 +12,12 @@ return new class extends Migration {
     {
         Schema::create('question_surveys', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('question_id')->constrained();
-            $table->foreignId('survey_id')->constrained();
+            $table->foreignId('question_id')
+                ->constrained()
+                ->onDelete('cascade');
+            $table->foreignId('survey_id')
+                ->constrained()
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -26,5 +29,4 @@ return new class extends Migration {
     {
         Schema::dropIfExists('question_surveys');
     }
-
 };

@@ -8,10 +8,9 @@ use App\Exceptions\NotFoundException;
 use App\Http\Resources\SurveyResource;
 use App\Models\Question;
 use App\Models\Survey;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator as LengthAwarePaginatorAlias;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Resources\Json\JsonResource;
-use InvalidArgumentException;
 
 class SurveyService
 {
@@ -32,10 +31,10 @@ class SurveyService
     }
 
     /**
-     * @return LengthAwarePaginatorAlias
+     * @return LengthAwarePaginator
      * @throws \App\Exceptions\NotFoundException
      */
-    public function getAll(): LengthAwarePaginatorAlias
+    public function getAll(): LengthAwarePaginator
     {
         $surveys = Survey::with('questions')->paginate(16);
 
@@ -64,7 +63,7 @@ class SurveyService
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      * @throws \App\Exceptions\NotFoundException
      */
-    public function getSurveysQuestions(): LengthAwarePaginatorAlias
+    public function getSurveysQuestions(): LengthAwarePaginator
     {
         $surveys = Survey::with('questions', 'questions.nestings')
             ->paginate(16);
