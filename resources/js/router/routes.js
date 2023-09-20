@@ -1,4 +1,3 @@
-import { createRouter, createWebHistory } from 'vue-router';
 import { useStore } from 'vuex';
 
 import MainLayout from '@/Layouts/Main';
@@ -218,8 +217,4 @@ const routes = [
     },
 ];
 
-const router = createRouter({
-    history: createWebHistory(), routes,
-});
-
-export default router;
+export default routes;

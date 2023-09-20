@@ -30,7 +30,7 @@
 <script setup>
 import axios from 'axios';
 import { reactive, ref } from 'vue';
-import router from '@/router/index';
+import router from '@/router/router';
 
 const form = reactive({
     email: '',

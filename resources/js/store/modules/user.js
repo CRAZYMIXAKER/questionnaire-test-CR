@@ -1,5 +1,5 @@
 import axios from 'axios';
-import router from '@/router/index.js';
+import router from '@/router/router';
 import { notify } from '@kyvg/vue3-notification';
 
 export default {

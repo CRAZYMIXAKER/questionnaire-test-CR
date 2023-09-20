@@ -116,7 +116,7 @@
 
 <script setup>
 import ModalWindow from '@/Components/ModalWindow/Default';
-import router from '@/router/index';
+import router from '@/router/router';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { notify } from '@kyvg/vue3-notification';

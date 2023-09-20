@@ -127,7 +127,7 @@
 
 <script setup>
 import ModalWindow from '@/Components/ModalWindow/Default';
-import router from '@/router/index';
+import router from '@/router/router';
 
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
