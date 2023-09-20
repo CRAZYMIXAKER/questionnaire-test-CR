@@ -57,7 +57,6 @@
                 <label>Title</label>
                 <input v-model="question.text" type="text">
             </div>
-            <!--            @change="$emit('update-select-answer', $event.target.value)"-->
 
             <div
                 v-if="
@@ -181,7 +180,6 @@ const deleteQuestion = (questionId) => {
 };
 
 const updateQuestion = (id, text) => {
-
     axios.patch(`/api/v1/questions/${id}`, { text: text })
         .then(res => {
             getQuestion();

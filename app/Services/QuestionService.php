@@ -90,8 +90,8 @@ class QuestionService
         }
 
         Question::create([
-            'text' => $text,
-            'type' => $type,
+            'text'      => $text,
+            'type'      => $type,
             'parent_id' => $parent_id,
         ]);
     }
@@ -131,6 +131,29 @@ class QuestionService
             throw new NotFoundException(
                 "Question with this id has not been found"
             );
+        }
+    }
+
+    /**
+     * @param  array  $data
+     *
+     * @return void
+     */
+    public function storeQuestion(array $data): void
+    {
+        $question = Question::create([
+            'text' => $data['text'],
+            'type' => $data['type'],
+        ]);
+
+        if (isset($data['nestings'])) {
+            foreach ($data['nestings'] as $nestingQuestion) {
+                Question::create([
+                    'text'      => $nestingQuestion['text'],
+                    'type'      => $question->type,
+                    'parent_id' => $question->id,
+                ]);
+            }
         }
     }
 }

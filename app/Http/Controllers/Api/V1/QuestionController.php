@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Exceptions\NotFoundException;
 use App\Http\Requests\Question\QuestionRequest;
 use App\Http\Requests\Question\StoreNestingQuestionRequest;
+use App\Http\Requests\Question\StoreQuestionRequest;
 use App\Http\Requests\Survey\SurveyRequest;
 use App\Services\QuestionService;
 use Exception;
@@ -140,6 +141,29 @@ class QuestionController extends ApiController
 
             return $this->successResponse(
                 message: 'Question type was successful updated'
+            );
+        } catch (NotFoundException $error) {
+            return $this->clientErrorsResponse(
+                message: $error->getMessage(),
+                code   : Response::HTTP_NOT_FOUND,
+            );
+        } catch (Exception) {
+            return $this->serverErrorResponse();
+        }
+    }
+
+    /**
+     * @param  \App\Http\Requests\Question\StoreQuestionRequest  $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(StoreQuestionRequest $request): JsonResponse
+    {
+        try {
+            $this->questionService->storeQuestion($request->validated());
+
+            return $this->successResponse(
+                message: 'Question was successful created!'
             );
         } catch (NotFoundException $error) {
             return $this->clientErrorsResponse(

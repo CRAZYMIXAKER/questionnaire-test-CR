@@ -60,6 +60,7 @@ Route::middleware('survey.session')->group(function () {
         '/questions/nesting',
         [QuestionController::class, 'storeNestingQuestion']
     );
+    Route::post('/questions/', [QuestionController::class, 'store']);
     Route::delete(
         '/questions/{id}',
         [QuestionController::class, 'destroy']

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Survey;
+namespace App\Http\Requests\Question;
 
+use App\Rules\IntOrNull;
 use Illuminate\Foundation\Http\FormRequest;
 
-class SurveyQuestionRequest extends FormRequest
+class StoreQuestionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +23,11 @@ class SurveyQuestionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'survey_id'      => ['required', 'integer'],
-            'question_ids'   => ['required', 'array'],
-            'question_ids.*' => ['integer'],
+            'text'            => ['required', 'string', 'max:255'],
+            'type'            => ['required', 'in:textarea,select,subquestion'],
+            'parent_id'       => ['nullable', 'integer'],
+            'nestings'        => ['array'],
+            'nestings.*.text' => ['string'],
         ];
     }
 }

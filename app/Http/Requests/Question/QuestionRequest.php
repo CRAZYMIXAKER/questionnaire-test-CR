@@ -24,9 +24,9 @@ class QuestionRequest extends FormRequest
     {
         return [
             'id'        => ['required', 'int'],
-            'text'      => ['max:255'],
+            'text'      => ['MAX:255'],
             'type'      => ['MAX:255'],
-            'parent_id' => [new IntOrNull()],
+            'parent_id' => ['nullable', 'integer'],
         ];
     }
 
