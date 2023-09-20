@@ -3,11 +3,11 @@
         <div v-if="surveys">
             <h1>Questionnaires</h1>
             <survey-list
-                :surveys="surveys.values"
+                :surveys="surveys"
                 @delete-survey="deleteSurvey($event)"
             />
             <pagination-main
-                :pagination="pagination.values"
+                :pagination="pagination"
                 @update-page="getSurveys($event)"
             />
         </div>
@@ -20,16 +20,16 @@
 <script setup>
 import SurveyList from '@/Components/Surveys/List.vue';
 import PaginationMain from '@/Components/Pagination/Main.vue';
-import { onMounted, reactive } from 'vue';
+import { onMounted, ref } from 'vue';
 
-const surveys = reactive([]);
-const pagination = reactive([]);
+const surveys = ref([]);
+const pagination = ref([]);
 
 const getSurveys = (page = 1) => {
     axios.get(`/api/v1/surveys?page=${page}`)
         .then(res => {
-            surveys.values = res.data.data.data;
-            pagination.values = res.data.data;
+            surveys.value = res.data.data.data;
+            pagination.value = res.data.data;
         })
         .catch(error => {
             console.log(error);
